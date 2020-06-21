@@ -58,7 +58,8 @@ try{
                 channel.send(embed);
                 break;
             case 'u':
-                channel.send(dataStorage(message));
+            channel.send("this is a wip right now.");
+                //channel.send(dataStorage(message));
                 break;
             case 'trainer':
                 getAvitar(channel,args[0])
