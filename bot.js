@@ -57,7 +57,12 @@ try{
 
                 channel.send(embed);
                 break;
-
+            case 'u':
+                channel.send(dataStorage(message));
+                break;
+            case 'blake':
+                channel.send(new Discord.MessageAttachment('./images/avitars/blake.png'));
+                break;
             default:
                 channel.send(`Command ${cont} not found. Type b!help for more options`);
                 break;
@@ -68,6 +73,15 @@ try{
      console.log(e);
  }
 });
+
+function dataStorage(message) {
+    let channel = message.channel;
+    let user = message.author;
+    let cont = message.content;
+
+    let data = JSON.parse(fs.readFileSync("./robotParts.json","uft8"));
+
+}
 
 
 client.login(auth.token);
