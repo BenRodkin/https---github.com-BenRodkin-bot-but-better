@@ -60,8 +60,11 @@ try{
             case 'u':
                 channel.send(dataStorage(message));
                 break;
-            case 'blake':
-                channel.send(new Discord.MessageAttachment('./images/avitars/blake.png'));
+            case 'trainer':
+                getAvitar(channel,args[0])
+                break;
+            case 'testChannel':
+                makeChannel(message)
                 break;
             default:
                 channel.send(`Command ${cont} not found. Type b!help for more options`);
@@ -74,12 +77,36 @@ try{
  }
 });
 
+function getAvitar(channel, person) {
+    try {
+        if (fs.existsSync('./images/avitars/' + person + '.png')) {
+            channel.send(new Discord.MessageAttachment('./images/avitars/' + person + '.png'));
+        } else {
+            channel.send(`Trainer ${person} not found.`);
+        }
+    } catch(e) {
+        channel.send(`Trainer ${person} has made an error!`);
+    }
+
+}
+
+function makeChannel(message) {
+    let server = message.guild;
+    let name = message.author.username;
+
+    //let newChannel = new Discord.TextChannel(server, "test").setName("testName").then(newChannel => console.log(`Channel's new name is ${newChannel.name}`))
+  //.catch(console.error);
+  let newChannel =server.channels.create("test",{type: 'text'});
+}
+
 function dataStorage(message) {
     let channel = message.channel;
     let user = message.author;
     let cont = message.content;
 
     let data = JSON.parse(fs.readFileSync("./robotParts.json","uft8"));
+
+
 
 }
 
