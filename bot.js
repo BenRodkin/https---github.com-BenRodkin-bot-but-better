@@ -59,7 +59,7 @@ try{
                 break;
             case 'u':
             channel.send("this is a wip right now.");
-                //channel.send(dataStorage(message));
+                channel.send(dataStorage(message));
                 break;
             case 'trainer':
                 getAvitar(channel,args[0])
@@ -97,7 +97,15 @@ function makeChannel(message) {
 
     //let newChannel = new Discord.TextChannel(server, "test").setName("testName").then(newChannel => console.log(`Channel's new name is ${newChannel.name}`))
   //.catch(console.error);
-  let newChannel =server.channels.create("test",{type: 'text'});
+  //let mySpot = server.
+  server.channels.create(`${name}\'s  channel`)
+  .then(channel => {
+    let category = server.channels.cache.find(c => c.name == "bot-channels" && c.type == "category");
+
+    if (!category) throw new Error("Category channel does not exist");
+    channel.setParent(category.id);
+  }).catch(console.error);
+
 }
 
 function dataStorage(message) {
@@ -105,9 +113,18 @@ function dataStorage(message) {
     let user = message.author;
     let cont = message.content;
 
-    let data = JSON.parse(fs.readFileSync("./robotParts.json","uft8"));
+    let parts = JSON.parse(fs.readFileSync("./robotParts.json","utf8"));
 
+if(!parts[user.id]) parts[user.id] = {
+    data1: 1,
+    data2: 2,
+    data3: 3
+}
 
+fs.writeFile("./robotParts.json", JSON.stringify(parts), (err) => {
+    if (err) console.error(err)
+});
+return "done";
 
 }
 
