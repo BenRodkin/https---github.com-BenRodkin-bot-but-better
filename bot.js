@@ -61,6 +61,9 @@ try{
             channel.send("this is a wip right now.");
                 channel.send(dataStorage(message));
                 break;
+            case 'h' :
+                fs.writeFile("./userData.json", JSON.stringify({}), (err) => {if (err) {console.log(err)} else {channel.send("removed all user data")}});
+                break;
             case 'trainer':
                 getAvitar(channel,args[0])
                 break;
@@ -113,18 +116,40 @@ function dataStorage(message) {
     let user = message.author;
     let cont = message.content;
 
-    let parts = JSON.parse(fs.readFileSync("./robotParts.json","utf8"));
+    let parts = JSON.parse(fs.readFileSync("./robotParts.json", "utf8"));
+    let data = JSON.parse(fs.readFileSync("./userData.json", "utf8"));
+    if(!data[user.id]) {
+        let shell = JSON.parse(fs.readFileSync("./userDataShell.json", "utf8"));
+        data[user.id] = {
+            shell
+            //JSON.parse(fs.readFileSync("./userDataShell.json", "utf8"));
+        }
+        //data[user.id].records.timeCreated = 7;
 
-if(!parts[user.id]) parts[user.id] = {
-    data1: 1,
-    data2: 2,
-    data3: 3
-}
 
-fs.writeFile("./robotParts.json", JSON.stringify(parts), (err) => {
-    if (err) console.error(err)
-});
-return "done";
+        fs.writeFile("./userData.json", JSON.stringify(data), (err) => {
+            if (err) console.error(err)
+        });
+
+        data = JSON.parse(fs.readFileSync("./userData.json", "utf8"));
+
+        console.log(data);
+        console.log(data[user.id].shell);
+        console.log(data[user.id].records.timeCreated);
+
+        fs.writeFile("./userData.json", JSON.stringify(data), (err) => {
+            if (err) console.error(err)
+        });
+
+        return "user created!";
+    } else {
+        fs.writeFile("./userData.json", JSON.stringify(data), (err) => {
+            if (err) console.error(err)
+        });
+        return "done";
+    }
+
+
 
 }
 
