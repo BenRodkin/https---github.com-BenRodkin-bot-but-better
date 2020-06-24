@@ -133,9 +133,9 @@ function dataStorage(message) {
 
         data = JSON.parse(fs.readFileSync("./userData.json", "utf8"));
 
-        console.log(data);
-        console.log(data[user.id].shell);
-        console.log(data[user.id].records.timeCreated);
+        //console.log(data);
+        //console.log(data[user.id].shell);
+        //console.log(data[user.id].records.timeCreated);
 
         fs.writeFile("./userData.json", JSON.stringify(data), (err) => {
             if (err) console.error(err)
