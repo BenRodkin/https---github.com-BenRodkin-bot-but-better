@@ -2,7 +2,9 @@ const discord = require ('discord.js');
 
 var client = new discord.Client();
 
-const token = "";
+const auth = require('./auth.json');
+
+
 
 const fs = require("fs");
 client.msgs = require ("./msgs.json");
@@ -78,4 +80,4 @@ client.on ("message", (message) => {
 
 });
 
-client.login (token);
+client.login (auth.token);
