@@ -69,11 +69,15 @@ try{
                 let att2 = new Discord.MessageAttachment(buffer, 'example.txt');
                 channel.send('here is file example', att2);
                 break;
-            //case 'embed':
-            //    let embed = new Discord.MessageEmbed()
-            //    .setTitle('A title')
-            //    .setColor(0xff00ff)
-            //    .setDescription('A description');
+            case 'embed':
+                const embed = new Discord.MessageEmbed ()
+                .setAuthor('Emris')
+                .setDescription('This is an embed')
+                .setFooter('This was made in js')
+                .addField('Hi there!')
+                .setThumbnail('https://media.discordapp.net/attachments/726549559584751683/727189926986121246/blake.png')
+                .setColor('#f5e042')
+            channel.send(embed)
 
             //    channel.send(embed);
             //    break;
