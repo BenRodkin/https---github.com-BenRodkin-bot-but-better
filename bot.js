@@ -247,7 +247,7 @@ try{
 //}
 
 function sendLocation(message) {
-    message.channel.send(new Discord.MessageAttachment("./images/maze/x"+xPos+"y"+yPos+".png"))
+    message.channel.send(new Discord.MessageAttachment("./images/mazes/0/x"+xPos+"y"+yPos+".png"))
     message.channel.send("Type '"+PREFIX+"Up', '"+PREFIX+"down', '"+PREFIX+"left', and '"+PREFIX+"right' to move around. Type '"+PREFIX+"resetmaze' to reset the maze.")
 }
 function cantMove(message) {
