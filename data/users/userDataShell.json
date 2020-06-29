@@ -13,5 +13,13 @@
     "storyModeStage" : -1,
 
     "timeCreated" : -1
+},
+"otherStuff" : {
+    "commandsOwned" : {
+
+    },
+    "mazeData" : {
+        
+    }
 }
 }

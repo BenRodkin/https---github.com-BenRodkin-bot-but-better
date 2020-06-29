@@ -4,7 +4,7 @@ const auth = require('./auth.json');
 const client = new Discord.Client();
 const fs = require('fs');
 
-const PREFIX = 'a!';
+const PREFIX = 'b!';
 
 client.on('ready', function (evt) {
     console.log(`Loggid in as ${client.user.tag}!`);
@@ -118,7 +118,7 @@ try{
                 }
                 break;
 
-            case 'displayx':
+            /*case 'displayx':
                 channel.send(xPos)
                 break;
             case 'displayy':
@@ -158,11 +158,14 @@ try{
                 channel.send("Maze reset!")
                 break;
 
-            case 'maze':
+            /*case 'maze':
                 mazeGame(message)
                 mazeComplete = false
+                break;*/
+            case 'maze':
+                mazeGame(message);
                 break;
-            case 'up':
+            /*case 'up':
                 moveUp(message)
                 break;
             case 'down':
@@ -173,7 +176,7 @@ try{
                 break;
             case 'right':
                 moveRight(message)
-                break;
+                break;*/
 
             case 'test1':
                 item = 5 * 5
@@ -247,7 +250,7 @@ try{
 //}
 
 function sendLocation(message) {
-    message.channel.send(new Discord.MessageAttachment("./images/mazes/0/" + (xPos - 1 + (yPos - 1) * 5)".png"))
+    message.channel.send(new Discord.MessageAttachment("./images/mazes/0/" + (xPos - 1 + (yPos - 1) * 5) + ".png"))
     message.channel.send("Type '"+PREFIX+"Up', '"+PREFIX+"down', '"+PREFIX+"left', and '"+PREFIX+"right' to move around. Type '"+PREFIX+"resetmaze' to reset the maze.")
 }
 function cantMove(message) {
@@ -339,7 +342,8 @@ function moveDown(message) {
 }
 function mazeGame(message) {
 
-    sendLocation(message)
+    ensureUserInDB(message.author);
+    //sendLocation(message)
     //if (xPos = 2) {
     //    if (yPos = 1) {
     //        message.channel.send(new Discord.MessageAttachment('./maze/x2y1.png'));
@@ -388,6 +392,22 @@ function makeChannel(message) {
 
 }
 
+function ensureUserInDB(user) {
+    let data = JSON.parse(fs.readFileSync("./data/users/userData.json", "utf8"));
+    if(!data[user.id]) {
+        let shell = JSON.parse(fs.readFileSync("./data/users/userDataShell.json", "utf8"));
+        data[user.id] = shell;
+
+        data[user.id].records.timeCreated = Date.now();
+
+        fs.writeFile("./data/users/userData.json", JSON.stringify(data), (err) => {
+            if (err) console.error(err)
+            else console.log(user.id + " has been added!")
+        });
+    }
+}
+
+
 function dataStorage(message) {
     let channel = message.channel;
     let user = message.author;
@@ -395,36 +415,11 @@ function dataStorage(message) {
 
     let parts = JSON.parse(fs.readFileSync("./robotParts.json", "utf8"));
     let data = JSON.parse(fs.readFileSync("./userData.json", "utf8"));
-    if(!data[user.id]) {
-        let shell = JSON.parse(fs.readFileSync("./userDataShell.json", "utf8"));
-        data[user.id] = {
-            shell
-            //JSON.parse(fs.readFileSync("./userDataShell.json", "utf8"));
-        }
-        //data[user.id].records.timeCreated = 7;
 
+    ensureUserInDB(user)
 
-        fs.writeFile("./userData.json", JSON.stringify(data), (err) => {
-            if (err) console.error(err)
-        });
+    return "done";
 
-        data = JSON.parse(fs.readFileSync("./userData.json", "utf8"));
-
-        //console.log(data);
-        //console.log(data[user.id].shell);
-        //console.log(data[user.id].records.timeCreated);
-
-        fs.writeFile("./userData.json", JSON.stringify(data), (err) => {
-            if (err) console.error(err)
-        });
-
-        return "user created!";
-    } else {
-        fs.writeFile("./userData.json", JSON.stringify(data), (err) => {
-            if (err) console.error(err)
-        });
-        return "done";
-    }
 
 
 
