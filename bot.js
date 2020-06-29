@@ -44,7 +44,7 @@ try{
             // !ping
             case 'ping':
                 channel.send("it does work @Kody#5071");
-                message.channel.send("Pinging ...") 
+                message.channel.send("Pinging ...")
 			    .then((msg) => {
 				msg.edit(`Ping: ${msg.createdTimestamp - Date.now()}ms`)
 			});
@@ -88,7 +88,7 @@ try{
                 break;
 
                 //functional commands
-            
+
             case 'help':
                 channel.send("Here are some commands I have: \n a!delete <number> (deletes a number of messages) \n a!maze (allows you to play a maze game) \n a!spam <mention> <number> (mentions a given person a set number of times, still under construction) \n a!8ball <question> (a magic 8ball tells you your fate) \n a!ping (check the speed at which the bot responds)")
                 break;
@@ -157,7 +157,7 @@ try{
                 yPos = 1
                 channel.send("Maze reset!")
                 break;
-            
+
             case 'maze':
                 mazeGame(message)
                 mazeComplete = false
@@ -174,12 +174,12 @@ try{
             case 'right':
                 moveRight(message)
                 break;
-            
+
             case 'test1':
                 item = 5 * 5
                 channel.send(item)
                 break;
-                
+
             case 'getmention':
                 mention = message.mentions.users.first()
                 if (mention == null) {return;}
@@ -207,7 +207,7 @@ try{
                 var random = Math.floor (Math.random() * (9))
                 channel.send(new Discord.MessageAttachment("./randomimages/"+random+".jpg"))
                 break;
-    
+
                 //testing
 
             //case 'sleep':
@@ -247,7 +247,7 @@ try{
 //}
 
 function sendLocation(message) {
-    message.channel.send(new Discord.MessageAttachment("./maze/x"+xPos+"y"+yPos+".png"))
+    message.channel.send(new Discord.MessageAttachment("./images/maze/x"+xPos+"y"+yPos+".png"))
     message.channel.send("Type '"+PREFIX+"Up', '"+PREFIX+"down', '"+PREFIX+"left', and '"+PREFIX+"right' to move around. Type '"+PREFIX+"resetmaze' to reset the maze.")
 }
 function cantMove(message) {
@@ -276,21 +276,21 @@ function canMoveDown(message) {
 function moveLeft(message) {
     if (xPos == 1) {
         cantMove(message)
-    
+
     }
     else if (((xPos == 2) && (yPos == 1)) || ((xPos == 2) && (yPos == 4)) || ((xPos == 4) && (yPos == 1)) || ((xPos == 4) && (yPos == 2)) || ((xPos == 5) && (yPos == 1)) || ((xPos == 5) && (yPos == 5))) {
         cantMove(message)
     }
 //    else if ((xPos == 2) && (yPos == 1)) {
 //        cantMove(message)
-//    
+//
 //    }
 //    else if ((xPos == 2) && (yPos == 4)) {
 //        cantMove(message)
 //    }
     else {
         canMoveLeft(message)
-    
+
     }
 
 
@@ -316,7 +316,7 @@ function moveUp(message) {
     }
     else if ((xPos==4)&&(yPos==5)) {
         message.channel.send ("You did it! You finished the maze!")
-        message.channel.send (new Discord.MessageAttachment("./randomimages/congrats.jpg"))
+        message.channel.send (new Discord.MessageAttachment("./images/randomimages/congrats.jpg"))
         mazeComplete = true
         xPos = 2
         yPos = 1
