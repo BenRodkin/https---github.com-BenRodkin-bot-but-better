@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const auth = require('./auth.json');
 const client = new Discord.Client();
 const fs = require('fs');
+const mazeController = require('./scripts/mazeController');
 
 const PREFIX = 'b!';
 
