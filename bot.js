@@ -12,6 +12,8 @@ client.on('ready', function (evt) {
 
 var xPos = 2
 var yPos = 1
+var mazeComplete = true
+
 client.on("guildMemberAdd", member => {
     var role = member.guild.roles.find ("name", "Outsiders");
     member.addRole (role);
@@ -88,7 +90,7 @@ try{
                 //functional commands
             
             case 'help':
-                channel.send("Here are some commands I have: a!delete <number> (deletes a number of messages), a!maze (allows you to play a maze game), a!spam <mention> <number> (mentions a given person a set number of times), a!8ball <question> (a magic 8ball tells you your fate), a!ping (check the speed at which the bot responds)")
+                channel.send("Here are some commands I have: \n a!delete <number> (deletes a number of messages) \n a!maze (allows you to play a maze game) \n a!spam <mention> <number> (mentions a given person a set number of times, still under construction) \n a!8ball <question> (a magic 8ball tells you your fate) \n a!ping (check the speed at which the bot responds)")
                 break;
 
             case 'delete':
@@ -123,6 +125,18 @@ try{
                 yPos-=1
                 channel.send("Y value removed!")
                 break;
+            case 'sety' :
+                ySet = message.content.slice(7)
+                yPos = ySet
+                channel.send ("Y valuse set!")
+                break;
+            case 'setx' : {
+                xSet = message.content.slice(7)
+                xPos = xSet
+                channel.send ("X value set!")
+                break;
+            }
+
             case 'resetmaze':
                 xPos = 2
                 yPos = 1
@@ -286,6 +300,7 @@ function moveUp(message) {
     }
     else if ((xPos==4)&&(yPos==5)) {
         message.channel.send ("You did it! You finished the maze!")
+        message.channel.send (new Discord.MessageAttachment("./randomimages/congrats.jpeg"))
         xPos = 2
         yPos = 1
     }
