@@ -68,14 +68,14 @@ try{
                 let att2 = new Discord.MessageAttachment(buffer, 'example.txt');
                 channel.send('here is file example', att2);
                 break;
-            case 'embed':
-                let embed = new Discord.MessageEmbed()
-                .setTitle('A title')
-                .setColor(0xff00ff)
-                .setDescription('A description');
+            //case 'embed':
+            //    let embed = new Discord.MessageEmbed()
+            //    .setTitle('A title')
+            //    .setColor(0xff00ff)
+            //    .setDescription('A description');
 
-                channel.send(embed);
-                break;
+            //    channel.send(embed);
+            //    break;
             case 'u':
             channel.send("this is a wip right now.");
                 channel.send(dataStorage(message));
@@ -91,6 +91,21 @@ try{
             
             case 'help':
                 channel.send("Here are some commands I have: \n a!delete <number> (deletes a number of messages) \n a!maze (allows you to play a maze game) \n a!spam <mention> <number> (mentions a given person a set number of times, still under construction) \n a!8ball <question> (a magic 8ball tells you your fate) \n a!ping (check the speed at which the bot responds)")
+                break;
+            case 'embed':
+                embed = new Discord.MessageEmbed (data.setAuthor('Emris')
+                .setDescription('This is an embed')
+                .setFooter('This was made in js')
+                .addField('Hi there!')
+                .setThumbnail('./images/avitars/blake.png')
+                .setColor('#f5e042'))
+                //    .setAuthor('Emris')
+                //    .setDescription('This is an embed')
+                //    .setFooter('This was made in js')
+                //    .addField('Hi there!')
+                //    .setThumbnail('./images/avitars/blake.png')
+                //    .setColor('#f5e042')
+                channel.send(embed)
                 break;
 
             case 'delete':
@@ -145,6 +160,7 @@ try{
             
             case 'maze':
                 mazeGame(message)
+                mazeComplete = false
                 break;
             case 'up':
                 moveUp(message)
@@ -300,7 +316,8 @@ function moveUp(message) {
     }
     else if ((xPos==4)&&(yPos==5)) {
         message.channel.send ("You did it! You finished the maze!")
-        message.channel.send (new Discord.MessageAttachment("./randomimages/congrats.jpeg"))
+        message.channel.send (new Discord.MessageAttachment("./randomimages/congrats.jpg"))
+        mazeComplete = true
         xPos = 2
         yPos = 1
     }
