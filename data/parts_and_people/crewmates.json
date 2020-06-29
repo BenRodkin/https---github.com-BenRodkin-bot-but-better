@@ -1,0 +1,42 @@
+{
+    "example" : {
+        "info" : {
+            "name" : "test"
+            "description" : "This is a example for what a crewmate could be",
+            "_id" : -1234
+        },
+        "_comment" : "for all buffs and nerfs, the typeOf property should always be either a '+'  or '-' (adds/subtracts the buff/nerf to the attribute), a '*' or '/' (multiplies/divides the buff/nerf by the attribute), or a '^' or '%' (raises the buff/nerf to a power/root) ",
+        "stats" : {
+            "buff1" : {
+                "description" : "buffs attribute buff1",
+                "typeOf" : "+",
+                "default" : "0"
+            },
+            "buff2" : {
+                "description" : "buffs attribute buff2",
+                "typeOf" : "*",
+                "default" : "0"
+            },
+            "buff3" : {
+                "description" : "buffs attribute buff3",
+                "typeOf" : "^",
+                "default" : "0"
+
+            "nerf1" : {
+                "description" : "nerfs attribute nerf1",
+                "typeOf" : "-",
+                "default" : "0"
+            },
+            "nerf2" : {
+                "description" : "nerfs attribute nerf2",
+                "typeOf" : "/",
+                "default" : "0"
+            },
+            "nerf3" : {
+                "description" : "nerfs attribute nerf3",
+                "typeOf" : "%",
+                "default" : "0"
+            }
+        }
+    }
+}
