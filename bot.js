@@ -163,7 +163,7 @@ try{
                 mazeComplete = false
                 break;*/
             case 'maze':
-                mazeGame(message);
+                mazeGame(message, args);
                 break;
             /*case 'up':
                 moveUp(message)
@@ -340,9 +340,14 @@ function moveDown(message) {
     }
 
 }
-function mazeGame(message) {
+function mazeGame(message, args) {
 
     ensureUserInDB(message.author);
+
+    message.channel.send(mazeController(message.author.id, args));
+
+
+
     //sendLocation(message)
     //if (xPos = 2) {
     //    if (yPos = 1) {
@@ -403,6 +408,10 @@ function ensureUserInDB(user) {
         fs.writeFile("./data/users/userData.json", JSON.stringify(data), (err) => {
             if (err) console.error(err)
             else console.log(user.id + " has been added!")
+        });
+    } else {
+        fs.writeFile("./data/users/userData.json", JSON.stringify(data), (err) => {
+            if (err) console.error(err)
         });
     }
 }
