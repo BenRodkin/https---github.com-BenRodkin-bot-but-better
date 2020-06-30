@@ -223,6 +223,7 @@ try{
             case 'test1':
                 //the "727595969100775566" is the message ID. We will replace this with the MazeMessage variable.
                 const editEmbed = new Discord.MessageEmbed ().setImage('https://media.discordapp.net/attachments/727565988752523354/727596289088290846/blankmaze.gif').setColor('#f5e042')
+                //channel.send(editEmbed)
                 message.channel.messages.fetch({around: 727595969100775566, limit: 1})
                 .then(msg => {
                 const fetchedMsg = msg.first();
