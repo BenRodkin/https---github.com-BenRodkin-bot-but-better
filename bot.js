@@ -16,7 +16,7 @@ client.on('ready', function (evt) {
 
 var xPos = 2
 var yPos = 1
-var mazeComplete = true
+var mazeActive = 0
 
 client.on("guildMemberAdd", member => {
     var role = member.guild.roles.find ("name", "Outsiders");
@@ -37,6 +37,16 @@ client.on('message', message => {
     if (message.content.includes("rip")) {
         message.channel.send(new Discord.MessageAttachment("./randomimages/tombstone.jpg"));
     }
+
+    if (mazeActive == 1) {
+        if (message.author.id == "723979592024719370") {
+            channel.messages.fetch({ limit: 1 }).then(messages => {
+                MazeMessage = messages.first().id;
+                //let channelID = message.channelID
+                //message.channel.send(MazeMessage)})
+            mazeActive = 0
+        })}
+    };
 try{
 
     if (cont.substring(0, PREFIX.length) == PREFIX) {
@@ -191,6 +201,8 @@ try{
                 break;*/
             case 'maze':
                 mazeGame(message, args);
+                mazeActive = 1
+
                 break;
             
             //=============================================================================================================================
@@ -209,9 +221,13 @@ try{
             //==============================================================================================================================
 
             case 'test1':
-                item = 5 * 5
-                channel.send(item)
-                break;
+                //the "727595969100775566" is the message ID. We will replace this with the MazeMessage variable.
+                const editEmbed = new Discord.MessageEmbed ().setImage('https://media.discordapp.net/attachments/727565988752523354/727596289088290846/blankmaze.gif').setColor('#f5e042')
+                message.channel.messages.fetch({around: 727595969100775566, limit: 1})
+                .then(msg => {
+                const fetchedMsg = msg.first();
+                fetchedMsg.edit(editEmbed);
+                })
 
             case 'getmention':
                 mention = message.mentions.users.first()
