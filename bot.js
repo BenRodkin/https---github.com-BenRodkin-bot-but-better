@@ -5,10 +5,13 @@ const client = new Discord.Client();
 const fs = require('fs');
 const mazeController = require('./scripts/mazeController');
 
-const PREFIX = 'b!';
+const PREFIX = 'a!';
 
 client.on('ready', function (evt) {
     console.log(`Loggid in as ${client.user.tag}!`);
+    client.user.setActivity('with your emotions...', { type: 'PLAYING' })
+    .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
+    .catch(console.error);
 });
 
 var xPos = 2
@@ -98,19 +101,23 @@ try{
                 channel.send("Here are some commands I have: \n a!delete <number> (deletes a number of messages) \n a!maze (allows you to play a maze game) \n a!spam <mention> <number> (mentions a given person a set number of times, still under construction) \n a!8ball <question> (a magic 8ball tells you your fate) \n a!ping (check the speed at which the bot responds)")
                 break;
             case 'embed':
-                embed = new Discord.MessageEmbed (data.setAuthor('Emris')
-                .setDescription('This is an embed')
-                .setFooter('This was made in js')
-                .addField('Hi there!')
-                .setThumbnail('./images/avitars/blake.png')
-                .setColor('#f5e042'))
+                const embed = new Discord.MessageEmbed ()
+                //.setAuthor('Emris')
+                //.setDescription('This is an embed')
+                //.setFooter('This was made in js')
+                //.attachFiles('./maze/blankmaze.gif')
+                .setImage('https://media.discordapp.net/attachments/723667226778927136/727607580213510184/blankmaze2.png')
+                //.addField(new Discord.MessageAttachment('https://media.discordapp.net/attachments/727565988752523354/727568477954769037/x2y1large.png'))
+                //.setThumbnail(url = 'https://media.discordapp.net/attachments/727565988752523354/727568477954769037/x2y1large.png?width=1000&height=946')
+                //.setThumbnail(url = 'https://media.discordapp.net/attachments/726549559584751683/727189926986121246/blake.png', outerWidth = '249', outerHeight = '243')
+                .setColor('#f5e042')
+            channel.send(embed)
                 //    .setAuthor('Emris')
                 //    .setDescription('This is an embed')
                 //    .setFooter('This was made in js')
                 //    .addField('Hi there!')
                 //    .setThumbnail('./images/avitars/blake.png')
                 //    .setColor('#f5e042')
-                channel.send(embed)
                 break;
 
             case 'delete':
@@ -123,7 +130,8 @@ try{
                 }
                 break;
 
-            /*case 'displayx':
+            //==============================================================================================================================
+            case 'displayx':
                 channel.send(xPos)
                 break;
             case 'displayy':
@@ -156,12 +164,26 @@ try{
                 channel.send ("X value set!")
                 break;
             }
+            
+            case 'editmessage':
+                channel.send("Ima edit this")
+                messageID = message.guild.me.find.messageID()
+                message.channel.messages.fetch({around: messageID, limit: 1})
+                    .then(msg => {
+                const fetchedMsg = msg.first();
+                fetchedMsg.edit("Lol");
+                })
+                break;
+
+            //case 'maze2':
+
 
             case 'resetmaze':
                 xPos = 2
                 yPos = 1
                 channel.send("Maze reset!")
                 break;
+            //==============================================================================================================================
 
             /*case 'maze':
                 mazeGame(message)
@@ -170,7 +192,9 @@ try{
             case 'maze':
                 mazeGame(message, args);
                 break;
-            /*case 'up':
+            
+            //=============================================================================================================================
+            case 'up':
                 moveUp(message)
                 break;
             case 'down':
@@ -181,7 +205,8 @@ try{
                 break;
             case 'right':
                 moveRight(message)
-                break;*/
+                break;
+            //==============================================================================================================================
 
             case 'test1':
                 item = 5 * 5
@@ -228,8 +253,11 @@ try{
             case 'deletetest':
                 //1000 = 1 sec
                 deleteTime = 3000
-                message.delete (3000)
-                message.reply ("Deleting our messages...").then(d_msg => { d_msg.delete(3000) })
+                //message.delete (3000)
+                channel.send("Ima delete this...").then(msg => {
+                    msg.delete({ timeout: 5000 })
+                    })
+                    .catch(console.error);
                 break;
 
             default:
