@@ -45,21 +45,21 @@
     "henry" : {
         "info" : {
             "name" : "henry",
-            "description" : "An engineer, henry gives +1 endurance, but -1 skill.",
+            "description" : "An engineer, henry gives +1 endurance -1 size, but -1 drive skill.",
             "_id" : -1111
         },
         "_comment" : "henry is a basic, common crew mate and gives a boost to endurance but a debuff to skill.",
         "stats" : {
             "rarity" : {
-
+                "common" : "+0 => +25% boost on stats gained per level."
             },
             "buff1" : {
-                "description" : "buffs attribute buff1",
-                "typeOf" : "+",
-                "default" : "0"
+                "description" : "Is good at building things into smaller spaces.",
+                "typeOf" : "-1 speed",
+                "default" : "1"
             },
             "buff2" : {
-                "description" : "buffs attribute buff2",
+                "description" : "is good at building sturdy bots.",
                 "typeOf" : "*",
                 "default" : "0"
             },
@@ -69,9 +69,9 @@
                 "default" : "0"
             },
             "nerf1" : {
-                "description" : "nerfs attribute nerf1",
-                "typeOf" : "-",
-                "default" : "0"
+                "description" : "Is bad at driving.",
+                "typeOf" : "-1 meanueverability",
+                "default" : "-1"
             },
             "nerf2" : {
                 "description" : "nerfs attribute nerf2",

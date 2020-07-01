@@ -35,7 +35,7 @@ client.on('message', message => {
     let evt = message.evt;
     //if()
     if (message.content.includes("rip")) {
-        message.channel.send(new Discord.MessageAttachment("./randomimages/tombstone.jpg"));
+        message.channel.send(new Discord.MessageAttachment("./images/randomimages/tombstone.jpg"));
     }
 
     if (mazeActive == 1) {
@@ -57,7 +57,6 @@ try{
         switch(cmd) {
             // !ping
             case 'ping':
-                channel.send("it does work @Kody#5071");
                 message.channel.send("Pinging ...")
 			    .then((msg) => {
 				msg.edit(`Ping: ${msg.createdTimestamp - Date.now()}ms`)
