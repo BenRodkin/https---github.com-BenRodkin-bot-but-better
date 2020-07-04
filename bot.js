@@ -4,12 +4,13 @@ const auth = require('./auth.json');
 const client = new Discord.Client();
 const fs = require('fs');
 const mazeController = require('./scripts/mazeController');
+const miniGame = require('./scripts/thewanderer');
 
 const PREFIX = 'a!';
 
 client.on('ready', function (evt) {
     console.log(`Loggid in as ${client.user.tag}!`);
-    client.user.setActivity('with your emotions...', { type: 'PLAYING' })
+    client.user.setActivity('the world burn', { type: 'WATCHING' })
     .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
     .catch(console.error);
 });
@@ -138,6 +139,48 @@ try{
                     channel.send ("That's too much! Try a lesser number...")
                 }
                 break;
+            case 'only':
+                if (message.author.id == "364590637993033731")
+                    channel.send("It worked")
+                else {
+                    channel.send("Wrong person")
+                }
+                break;
+            case 'say':
+                sayMessage = message.content.slice(6)
+                channel.send(sayMessage)
+                message.delete()
+                break;
+            /*case 'ship':
+                item1 = message.content.split(' ')
+                if (item1 == null) {
+                    channel.send("You need to send a value!")
+                    break;
+                }
+                else if (item2 == null) {
+                    sender = message.author
+                    var affinity = Math.floor (Math.random() * (100))
+                    channel.send('${item[0]}and${sender}are ${affinity}% compatible!`)
+                    break;
+                }
+                else {
+                    var affinity = Math.floor (Math.random() * (100))
+                    channel.send(item1+"\nand\n"+item2+"\nare "+affinity+"% compatible!")
+                    break;
+                }*/
+
+            case 'channel':
+                channel1 = message.channel
+                channel.send("got it")
+                break;
+            case 'channelsend':
+                channel1.send("It worked")
+                break;
+            case 'test3000':
+                if (message.channel == channel1) {
+                    channel.send("This is the right channel")
+                    break;
+                }
 
             //==============================================================================================================================
             case 'displayx':
