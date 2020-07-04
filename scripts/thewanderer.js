@@ -1,8 +1,6 @@
 const Discord = require('discord.js');
-
-const auth = require('./auth.json');
-const client = new Discord.Client();
 const fs = require('fs');
+const client = new Discord.Client();
 
 const PREFIX = 'w!';
 
@@ -17,6 +15,15 @@ client.on('message', message => {
     let channel = message.channel;
     let channelID = message.channelID;
     let evt = message.evt;
+var ImageOnHill = 'https://media.discordapp.net/attachments/726550648660688979/729035392661192764/onhill.png?width=492&height=492'
+
+const helpEmbed = new Discord.MessageEmbed ()
+    .setColor('#0400ff')
+    .setAuthor("The Wanderer©")
+    .setDescription("Type w!start to begin the adventure!")
+    .addField("This is the Wanderer Help page!")
+    .setFooter("Nothin")
+    .setImage(ImageOnHill)
 try{
 
     if (cont.substring(0, PREFIX.length) == PREFIX) {
@@ -27,6 +34,7 @@ try{
         switch(cmd) {
 
             case 'help':
+                channel.send(helpEmbed)
                 break;
 
             default:
@@ -39,3 +47,5 @@ try{
      console.log(e);
  }
 });
+
+client.login("NzIzOTc5NTkyMDI0NzE5Mzcw.XwDHKg.idagV0hj-1M3GhBHYB-N38MErTg");

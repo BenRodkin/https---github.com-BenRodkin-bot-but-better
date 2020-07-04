@@ -4,7 +4,7 @@ const auth = require('./auth.json');
 const client = new Discord.Client();
 const fs = require('fs');
 const mazeController = require('./scripts/mazeController');
-const miniGame = require('./scripts/thewanderer');
+const miniGame = require('./scripts/thewanderer.js');
 
 const PREFIX = 'a!';
 
