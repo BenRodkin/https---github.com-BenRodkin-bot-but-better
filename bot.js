@@ -5,6 +5,7 @@ const client = new Discord.Client();
 const fs = require('fs');
 const mazeController = require('./scripts/mazeController');
 const miniGame = require('./scripts/thewanderer.js');
+const { isNullOrUndefined, isUndefined } = require('util');
 client.var = require ('./data/users/var.json');
 
 const PREFIX = 'a!';
@@ -35,13 +36,9 @@ client.on('message', message => {
     let channel = message.channel;
     let channelID = message.channelID;
     let evt = message.evt;
-    //if()
-    if (message.content.includes("rip")) {
-        message.channel.send(new Discord.MessageAttachment("./images/randomimages/tombstone.jpg"));
-    }
-
+    //if()    
     if (mazeActive == 1) {
-        if (message.author.id == "723979592024719370") {
+        if (!message.author.id == "723979592024719370") {
             channel.messages.fetch({ limit: 1 }).then(messages => {
                 MazeMessage = messages.first().id;
                 //let channelID = message.channelID
@@ -49,6 +46,31 @@ client.on('message', message => {
             mazeActive = 0
         })}
     };
+    if(message.author.bot) {
+        return;
+    };
+    
+    if (!client.var[message.author.username]){
+        var moneys = 0
+        var messagesave = "*No message*"
+        client.var [message.author.username] = {
+            coins: moneys,
+            message: messagesave
+        };
+        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+            if (err) throw err});
+    };
+    
+    moneys = client.var[message.author.username].coins;
+    client.var [message.author.username].coins = {
+        coins: moneys + 1
+    }
+    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+        if (err) throw err})
+
+    if (message.content.includes("rip")) {
+        message.channel.send(new Discord.MessageAttachment("./images/randomimages/tombstone.jpg"));
+    }
 try{
 
     if (cont.substring(0, PREFIX.length) == PREFIX) {
@@ -193,9 +215,12 @@ try{
                 })
                 break;
             case 'read':
-                let _message = client.var[message.author.username].message
-                channel.send("Message is: "+ _message)
+                let messagesave = client.var[message.author.username].message
+                channel.send("Message is: "+ messagesave)
                 break;
+            case 'bal':
+                let _moneymessage = client.var[message.author.username].coins
+                channel.send("You balance is currently: "+_moneymessage+" (coins earned from messages sent)")
 
             //==============================================================================================================================
             case 'displayx':
