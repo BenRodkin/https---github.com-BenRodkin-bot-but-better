@@ -5,7 +5,7 @@ const client = new Discord.Client();
 const fs = require('fs');
 const mazeController = require('./scripts/mazeController');
 const miniGame = require('./scripts/thewanderer.js');
-client.var = require ('./var.json');
+client.var = require ('./data/users/var.json');
 
 const PREFIX = 'a!';
 
@@ -187,10 +187,14 @@ try{
                 client.var [message.author.username] = {
                     message: saveMessage
                 }
-                fs.writeFile ("./var.json", JSON.stringify(client.var,null,4), err => {
+                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
                     if (err) throw err
                     message.channel.send("Message written!")
                 })
+                break;
+            case 'read':
+                let _message = client.var[message.author.username].message
+                channel.send("Message is: "+ _message)
                 break;
 
             //==============================================================================================================================
