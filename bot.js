@@ -5,6 +5,7 @@ const client = new Discord.Client();
 const fs = require('fs');
 const mazeController = require('./scripts/mazeController');
 const miniGame = require('./scripts/thewanderer.js');
+client.var = require ('./var.json');
 
 const PREFIX = 'a!';
 
@@ -181,6 +182,16 @@ try{
                     channel.send("This is the right channel")
                     break;
                 }
+            case 'write':
+                saveMessage = message.content.slice(8)
+                client.var [message.author.username] = {
+                    message: saveMessage
+                }
+                fs.writeFile ("./var.json", JSON.stringify(client.var,null,4), err => {
+                    if (err) throw err
+                    message.channel.send("Message written!")
+                })
+                break;
 
             //==============================================================================================================================
             case 'displayx':
