@@ -38,7 +38,7 @@ client.on('message', message => {
     let evt = message.evt;
     //if()    
     if (mazeActive == 1) {
-        if (!message.author.id == "723979592024719370") {
+        if (message.author.id == "723979592024719370") {
             channel.messages.fetch({ limit: 1 }).then(messages => {
                 MazeMessage = messages.first().id;
                 //let channelID = message.channelID
@@ -55,13 +55,15 @@ client.on('message', message => {
         var emptyMessage = "(None)"
         client.var [message.author.username] = {
             coins: moneys,
-            message: emptyMessage
+            message: emptyMessage,
+            inventory: emptyMessage
         };
         fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-           if (err) throw err;
+            if (err) throw err;
         });
-        client.var [message.author.username].coins = moneys;
-        client.var [message.author.username].message = emptyMessage
+
+        //client.var [message.author.username].coins = moneys;
+        //client.var [message.author.username].message = emptyMessage
         
     };
     
@@ -72,9 +74,33 @@ client.on('message', message => {
         if (err) throw err;
     });
 
+    if (message.content.startsWith(PREFIX+"buy cookie")) {
+        if(![message.author.username].inventory) {
+            client.var [message.author.username].inventory = {
+               cookies: 0
+            }
+            fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                if (err) throw err;
+            });
+        };
+        if (client.var [message.author.username].coins > 9) {
+            moneys = client.var [message.author.username].coins 
+            client.var [message.author.username].coins = moneys - 10
+            cookies = client.var [message.author.username].inventory.cookies
+            client.var [message.author.username].inventory.cookies = cookies + 1
+            fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                if (err) throw err;
+                message.channel.send("Cookie Purchased!");
+            });
+        };
+        if (client.var [message.author.username].coins < 10) {
+            message.channel.send("You don't have enough coins!")
+        };
+    };
+
     if (message.content.includes("rip")) {
         message.channel.send(new Discord.MessageAttachment("./images/randomimages/tombstone.jpg"));
-    }
+    };
 try{
 
     if (cont.substring(0, PREFIX.length) == PREFIX) {
@@ -223,7 +249,23 @@ try{
             case 'bal':
                 let _moneymessage = client.var[message.author.username].coins
                 channel.send("You balance is currently: "+_moneymessage+" (coins earned from messages sent)")
+                break;
+            case 'shop':
+                channel.send("Here is what we have available:\n-Tonk: \nCost: 50\nAdds: 50 cool points\n-Cookie:\nCosts: 10\nAdds: 10 cool points\n Type \""+PREFIX+"buy (item name)\"")
+                break;
+            case 'inventory':
+                if (!client.var [message.author.username].inventory.cookies) {
+                    channel.send("You dont have any cookies.")
+                    break;
+                }
+                else {
+                    cookieCount = client.var [message.author.username].inventory.cookies
+                    channel.send("You have "+cookieCount+" cookies!")
+                    break;
+                }
 
+            case 'a!buy':
+                break;
             //==============================================================================================================================
             case 'displayx':
                 channel.send(xPos)

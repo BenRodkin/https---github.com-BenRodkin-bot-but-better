@@ -1,4 +1,4 @@
-"id": {
+{"id": {
     "inventory" : {
         "uniquePartId" : {
             "level" : 0,
@@ -41,4 +41,5 @@
         "rp" : 0,
         "storyModeStage" : -1
     }
+}
 }

@@ -1,14 +1,24 @@
 {
     "ζ͜͡𝕰𝖒𝖗𝖎𝖘, the Wanderer (失敗)": {
-        "coins": 63,
-        "message": "death"
+        "coins": 91,
+        "message": "boo",
+        "inventory": {
+            "cookies": 1
+        }
     },
     "Lasernerd": {
-        "coins": 73,
-        "message": "(None)"
+        "coins": 1211,
+        "message": "(None)",
+        "inventory": "(None)"
     },
     "Kody": {
-        "coins": 3,
-        "message": "(None)"
+        "coins": 13,
+        "message": "(None)",
+        "inventory": "(None)"
+    },
+    "10neb01": {
+        "coins": 101,
+        "message": "(None)",
+        "inventory": "(None)"
     }
 }
