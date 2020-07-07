@@ -52,21 +52,25 @@ client.on('message', message => {
     
     if (!client.var[message.author.username]){
         var moneys = 0
-        var messagesave = "*No message*"
+        var emptyMessage = "(None)"
         client.var [message.author.username] = {
             coins: moneys,
-            message: messagesave
+            message: emptyMessage
         };
         fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-            if (err) throw err});
+           if (err) throw err;
+        });
+        client.var [message.author.username].coins = moneys;
+        client.var [message.author.username].message = emptyMessage
+        
     };
     
-    moneys = client.var[message.author.username].coins;
-    client.var [message.author.username].coins = {
-        coins: moneys + 1
-    }
+    moneys = client.var [message.author.username].coins 
+    //moneys = client.var[message.author.username].coins;
+    client.var [message.author.username].coins = moneys + 1;
     fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-        if (err) throw err})
+        if (err) throw err;
+    });
 
     if (message.content.includes("rip")) {
         message.channel.send(new Discord.MessageAttachment("./images/randomimages/tombstone.jpg"));
@@ -206,12 +210,10 @@ try{
                 }
             case 'write':
                 saveMessage = message.content.slice(8)
-                client.var [message.author.username] = {
-                    message: saveMessage
-                }
+                client.var [message.author.username].message = saveMessage;
                 fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
                     if (err) throw err
-                    message.channel.send("Message written!")
+                message.channel.send("Message written!")
                 })
                 break;
             case 'read':

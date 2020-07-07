@@ -1,14 +1,10 @@
 {
-    "Lasernerd": {
-        "message": "can i test it"
-    },
     "ζ͜͡𝕰𝖒𝖗𝖎𝖘, the Wanderer (失敗)": {
-        "message": "ban"
+        "coins": 23,
+        "message": "death"
     },
-    "10neb01": {
-        "coins": {
-            "coins": 1
-        },
-        "message": "*No message*"
+    "Lasernerd": {
+        "coins": 6,
+        "message": "(None)"
     }
 }
