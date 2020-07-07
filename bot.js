@@ -12,7 +12,7 @@ const PREFIX = 'a!';
 
 client.on('ready', function (evt) {
     console.log(`Loggid in as ${client.user.tag}!`);
-    client.user.setActivity('the world burn', { type: 'WATCHING' })
+    client.user.setActivity('Kody beat Micah with robots~', { type: 'WATCHING' })
     .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
     .catch(console.error);
 });

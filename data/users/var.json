@@ -1,10 +1,14 @@
 {
     "ζ͜͡𝕰𝖒𝖗𝖎𝖘, the Wanderer (失敗)": {
-        "coins": 23,
+        "coins": 63,
         "message": "death"
     },
     "Lasernerd": {
-        "coins": 6,
+        "coins": 73,
+        "message": "(None)"
+    },
+    "Kody": {
+        "coins": 3,
         "message": "(None)"
     }
 }
