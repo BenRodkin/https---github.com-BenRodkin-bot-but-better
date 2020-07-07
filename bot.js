@@ -75,26 +75,128 @@ client.on('message', message => {
     });
 
     if (message.content.startsWith(PREFIX+"buy cookie")) {
-        if(![message.author.username].inventory) {
+        if(!client.var [message.author.username].inventory.cookies) {
             client.var [message.author.username].inventory = {
                cookies: 0
             }
             fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
                 if (err) throw err;
             });
+            if (client.var [message.author.username].coins > 9) {
+                moneys = client.var [message.author.username].coins 
+                client.var [message.author.username].coins = moneys - 10
+                cookies = client.var [message.author.username].inventory.cookies
+                client.var [message.author.username].inventory.cookies = cookies + 1
+                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                    if (err) throw err;
+                    message.channel.send("Cookie Purchased!");
+                });
+                return;
+            }
+            if (client.var [message.author.username].coins < 10) {
+                message.channel.send("You don't have enough coins!")
+                return;
+            };
+        }
+        else {
+            if (client.var [message.author.username].coins < 10) {
+                message.channel.send("You don't have enough coins!")
+            }
+            if (client.var [message.author.username].coins > 9) {
+                moneys = client.var [message.author.username].coins 
+                client.var [message.author.username].coins = moneys - 10
+                cookies = client.var [message.author.username].inventory.cookies
+                client.var [message.author.username].inventory.cookies = cookies + 1
+                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                    if (err) throw err;
+                    message.channel.send("Cookie Purchased!");
+                });
+            };
         };
-        if (client.var [message.author.username].coins > 9) {
-            moneys = client.var [message.author.username].coins 
-            client.var [message.author.username].coins = moneys - 10
-            cookies = client.var [message.author.username].inventory.cookies
-            client.var [message.author.username].inventory.cookies = cookies + 1
-            fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                if (err) throw err;
-                message.channel.send("Cookie Purchased!");
-            });
-        };
-        if (client.var [message.author.username].coins < 10) {
-            message.channel.send("You don't have enough coins!")
+    };
+
+    if (message.content.startsWith(PREFIX+'cookiefight')) {
+        winner = 0
+        random = 0
+        cookieFightMessage = new Discord.MessageEmbed ()
+        .setAuthor('COOKIE FIGHT')
+        .setDescription('The battle was brutal.. cookies crumbled...')
+        .setFooter("You're the best cookie worrior!")
+        .addField(winner+", you have won the cookie fight!! You have earned "+random+" coins! :D")
+        .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+        .setColor('#f5e042')
+        opponent = message.mentions.users.first().username
+        enemyMention = message.mentions.users.first()
+        //item1 = message.author.id
+        //challengerMention = "<@"+item1+">"
+        challengerMention = message.author.id
+        if (!client.var [message.author.username].inventory.cookies){
+            channel.send("You have no cookies")
+            if (!client.var [opponent].inventory.cookies) {
+                channel.send("Neither of you have any cookies!! Go to the shop to buy one.")
+                return;
+            }
+            else {
+                message.reply("you dont have any cookies!")
+                return;
+            };
+        }
+        else if (!client.var [opponent].inventory.cookies){
+            channel.send("Your opponent doesn't have any cookies!")
+            return;
+        }
+        else {
+            var random = Math.floor (Math.random() * (50))
+            challenger = client.var [message.author.username].inventory.cookies
+            enemy = client.var [opponent].inventory.cookies
+            if (challenger > enemy) {
+                winner = message.author.id
+                loser = message.mentions.users.first().username
+                cookieFightMessage = new Discord.MessageEmbed ()
+                    .setAuthor('COOKIE FIGHT')
+                    .setDescription('The battle was brutal.. cookies crumbled...')
+                    .setFooter("You're the best cookie worrior!")
+                    .setDescription('<@'+winner+'>')
+                    .addField("You have won the cookie fight!! You stole "+random+" coins from "+loser+"! :D")
+                    .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                    .setColor('#f5e042')
+                coins = client.var [message.author.username].coins
+                client.var [message.author.username].coins = coins + random
+                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                    if (err) throw err;
+                });
+                coins2 = client.var [opponent].coins
+                client.var [opponent].coins = coins2 - random
+                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                    if (err) throw err;
+                });
+                channel.send(cookieFightMessage)
+                return;
+            }
+            if (enemy > challenger) {
+                winner = message.mentions.users.first().id
+                loser = message.author.username
+                cookieFightMessage = new Discord.MessageEmbed ()
+                    .setAuthor('COOKIE FIGHT')
+                    .setDescription('The battle was brutal.. cookies crumbled...')
+                    .setFooter("You're the best cookie worrior!")
+                    .setDescription("<@"+winner+">")
+                    .addField("you have won the cookie fight!! You stole "+random+" coins from "+loser+"! :D")
+                    .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                    .setColor('#f5e042')
+                coins = client.var [opponent].coins
+                client.var [opponent].coins = coins + random
+                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                    if (err) throw err;
+                });
+                coins2 = client.var [message.author.username].coins 
+                client.var [message.author.username].coins = coins2 - random
+                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                    if (err) throw err;
+                });
+                channel.send(cookieFightMessage)
+                return;
+            };
         };
     };
 
@@ -264,8 +366,25 @@ try{
                     break;
                 }
 
-            case 'a!buy':
+            case 'buy':
                 break;
+            case 'cookiefight':
+                break;
+            
+            case 'op':
+                user = message.author.id
+                const embed1 = new Discord.MessageEmbed ()
+                .setAuthor('Emris')
+                .setDescription('<@'+user+'>')
+                //.setFooter('This was made in js')
+                //.attachFiles('./maze/blankmaze.gif')
+                .setImage('https://media.discordapp.net/attachments/723667226778927136/727607580213510184/blankmaze2.png')
+                //.addField(new Discord.MessageAttachment('https://media.discordapp.net/attachments/727565988752523354/727568477954769037/x2y1large.png'))
+                //.setThumbnail(url = 'https://media.discordapp.net/attachments/727565988752523354/727568477954769037/x2y1large.png?width=1000&height=946')
+                //.setThumbnail(url = 'https://media.discordapp.net/attachments/726549559584751683/727189926986121246/blake.png', outerWidth = '249', outerHeight = '243')
+                .setColor('#f5e042')
+                channel.send(embed1)
+
             //==============================================================================================================================
             case 'displayx':
                 channel.send(xPos)
