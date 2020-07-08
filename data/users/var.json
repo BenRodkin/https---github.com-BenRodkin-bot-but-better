@@ -1,37 +1,35 @@
 {
     "ζ͜͡𝕰𝖒𝖗𝖎𝖘, the Wanderer (失敗)": {
-        "coins": -18,
+        "coins": 8,
         "message": "(None)",
         "inventory": {
-            "cookies": 23
-        }
-    },
-    "EmrisLeDraconic": {
-        "coins": 154,
-        "message": "(None)",
-        "inventory": {
-            "cookies": 7
-        }
-    },
-    "Lasernerd": {
-        "coins": 78,
-        "message": "(None)",
-        "inventory": {
-            "cookies": 147
+            "cookies": 79
         }
     },
     "10neb01": {
-        "coins": 93,
+        "coins": 127,
+        "message": "(None)",
+        "inventory": "(None)"
+    },
+    "Lasernerd": {
+        "coins": 30,
         "message": "(None)",
         "inventory": {
-            "cookies": 0
+            "cookies": 149
         }
     },
     "Kody": {
-        "coins": 63,
+        "coins": 29,
         "message": "(None)",
         "inventory": {
-            "cookies": 0
+            "cookies": 90
+        }
+    },
+    "EmrisLeDraconic": {
+        "coins": 400,
+        "message": "(None)",
+        "inventory": {
+            "cookies": 7
         }
     }
 }

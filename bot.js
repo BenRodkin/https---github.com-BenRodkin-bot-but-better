@@ -6,6 +6,7 @@ const fs = require('fs');
 const mazeController = require('./scripts/mazeController');
 const miniGame = require('./scripts/thewanderer.js');
 const { isNullOrUndefined, isUndefined } = require('util');
+const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require('constants');
 client.var = require ('./data/users/var.json');
 
 const PREFIX = 'a!';
@@ -75,6 +76,100 @@ client.on('message', message => {
     });
 
     if (message.content.startsWith(PREFIX+"buy cookie")) {
+    
+        if (isNaN(message.content.split(' ').slice(2))) {
+            message.channel.send("There isnt a number value")
+            numberOfC = 1
+            if(!client.var [message.author.username].inventory.cookies) {
+                client.var [message.author.username].inventory = {
+                   cookies: 0
+                }
+                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                    if (err) throw err;
+                });
+                if (client.var [message.author.username].coins > 9) {
+                    moneys = client.var [message.author.username].coins 
+                    client.var [message.author.username].coins = moneys - 10
+                    cookies = client.var [message.author.username].inventory.cookies
+                    client.var [message.author.username].inventory.cookies = cookies + 1
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                        message.channel.send("1 cookie Purchased!");
+                    });
+                    return;
+                }
+                if (client.var [message.author.username].coins < 10) {
+                    message.channel.send("You don't have enough coins!")
+                    return;
+                };
+            }
+            else {
+                if (client.var [message.author.username].coins < 10) {
+                    message.channel.send("You don't have enough coins!")
+                }
+                if (client.var [message.author.username].coins > 9) {
+                    moneys = client.var [message.author.username].coins 
+                    client.var [message.author.username].coins = moneys - 10
+                    cookies = client.var [message.author.username].inventory.cookies
+                    client.var [message.author.username].inventory.cookies = cookies + 1
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                        message.channel.send(numberOfC+" cookie Purchased!");
+                    });
+                    return;
+                };
+            };
+        }
+        else {
+            message.channel.send("there is a number value")
+            numberOfC = parseInt(message.content.split(' ').slice(2))
+            channel.send(numberOfC+" is how many cookies you are buying")
+            maths1 = message.content.split(' ').slice(2)
+            costC = maths1 * 10
+            channel.send(costC+" is how much it will cost")
+            if(!client.var [message.author.username].inventory.cookies) {
+                client.var [message.author.username].inventory = {
+                   cookies: 0
+                }
+                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                    if (err) throw err;
+                });
+                if (client.var [message.author.username].coins > costC - 1) {
+                    moneys = client.var [message.author.username].coins
+                    client.var [message.author.username].coins = moneys - costC
+                    cookies = parseInt(client.var [message.author.username].inventory.cookies)
+                    client.var [message.author.username].inventory.cookies = cookies + numberOfC
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                        message.channel.send(numberOfC+" cookies Purchased!");
+                    });
+                    return;
+                }
+                if (client.var [message.author.username].coins < costC) {
+                    message.channel.send("You don't have enough coins to buy "+numberOfC+" cookies!")
+                    return;
+                };
+            }
+            else {
+                if (client.var [message.author.username].coins < costC - 1) {
+                    message.channel.send("You don't have enough coins to buy "+numberOfC+" cookies!")
+                }
+                if (client.var [message.author.username].coins > costC ) {
+                    moneys = client.var [message.author.username].coins 
+                    client.var [message.author.username].coins = moneys - costC
+                    cookies = parseInt(client.var [message.author.username].inventory.cookies)
+                    client.var [message.author.username].inventory.cookies = cookies + numberOfC
+                    randomitem = numberOfC + cookies
+                    channel.send(randomitem+" is how many cookies added. From the combination of total numbers chosen: "+ numberOfC+" and how many cookies you already have: "+ cookies)
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                        message.channel.send(numberOfC+" cookies Purchased!");
+                    });
+                };
+            };
+        };
+        //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+        /*
         if(!client.var [message.author.username].inventory.cookies) {
             client.var [message.author.username].inventory = {
                cookies: 0
@@ -113,6 +208,8 @@ client.on('message', message => {
                 });
             };
         };
+        */
+        //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     };
 
     if (message.content.startsWith(PREFIX+'cookiefight')) {
@@ -147,36 +244,91 @@ client.on('message', message => {
         }
         else {
             var random = Math.floor (Math.random() * (50))
+            var rn = Math.random() * 100
             challenger = client.var [message.author.username].inventory.cookies
             enemy = client.var [opponent].inventory.cookies
-            if (challenger > enemy) {
+            winnerVar0 = challenger + enemy
+            winnerVar = challenger / winnerVar0 * 100
+            channel.send(challenger)
+            channel.send(enemy)
+            channel.send(winnerVar.toFixed(3))
+            if (winnerVar > rn) { //sender won
                 winner = message.author.id
                 loser = message.mentions.users.first().username
-                cookieFightMessage = new Discord.MessageEmbed ()
-                    .setAuthor('COOKIE FIGHT')
-                    .setDescription('The battle was brutal.. cookies crumbled...')
-                    .setFooter("You're the best cookie worrior!")
-                    .setDescription('<@'+winner+'>')
-                    .addField("You have won the cookie fight!! You stole "+random+" coins from "+loser+"! :D")
-                    .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-                    .setColor('#f5e042')
-                coins = client.var [message.author.username].coins
-                client.var [message.author.username].coins = coins + random
-                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                    if (err) throw err;
-                });
-                coins2 = client.var [opponent].coins
-                client.var [opponent].coins = coins2 - random
-                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                    if (err) throw err;
-                });
-                channel.send(cookieFightMessage)
-                return;
+                if (client.var[opponent].coins < random) {
+                    coins = client.var [message.author.username].coins
+                    gained = client.var [opponent].coins
+                    cookieFightMessage = new Discord.MessageEmbed ()
+                        .setAuthor('COOKIE FIGHT')
+                        .setDescription('The battle was brutal.. cookies crumbled...')
+                        .setFooter("You're the best cookie worrior!")
+                        .setDescription('<@'+winner+'>')
+                        .addField("You have won the cookie fight!! You stole "+gained+" coins from "+loser+"! :D")
+                        .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                        .setColor('#f5e042')
+                    client.var [message.author.username].coins = coins + gained
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    });
+                    client.var [opponent].coins = 0
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    });
+                    channel.send(cookieFightMessage)
+                    return;
+                }
+                else {
+                    cookieFightMessage = new Discord.MessageEmbed ()
+                        .setAuthor('COOKIE FIGHT')
+                        .setDescription('The battle was brutal.. cookies crumbled...')
+                        .setFooter("You're the best cookie worrior!")
+                        .setDescription('<@'+winner+'>')
+                        .addField("You have won the cookie fight!! You stole "+random+" coins from "+loser+"! :D")
+                        .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                        .setColor('#f5e042')
+                    coins = client.var [message.author.username].coins
+                    client.var [message.author.username].coins = coins + random
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    });
+                    coins2 = client.var [opponent].coins
+                    client.var [opponent].coins = coins2 - random
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    });
+                    channel.send(cookieFightMessage)
+                    return;
+                };
             }
-            if (enemy > challenger) {
+            if (winnerVar < rn) { //the other person won, not sender
                 winner = message.mentions.users.first().id
                 loser = message.author.username
-                cookieFightMessage = new Discord.MessageEmbed ()
+                if (client.var [loser].coins < random) {
+                    coins = client.var [opponent].coins
+                    gained = client.var [message.author.username].coins
+                    cookieFightMessage = new Discord.MessageEmbed ()
+                        .setAuthor('COOKIE FIGHT')
+                        .setDescription('The battle was brutal.. cookies crumbled...')
+                        .setFooter("You're the best cookie worrior!")
+                        .setDescription("<@"+winner+">")
+                        .addField("you have won the cookie fight!! You stole "+gained+" coins from "+loser+"! :D")
+                        .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                        .setColor('#f5e042')
+                    client.var [opponent].coins = coins + gained
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    }); 
+                    client.var [message.author.username].coins = 0
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    });
+                    channel.send(cookieFightMessage)
+                    return;
+                }
+                else {
+                    coins = client.var [opponent].coins
+                    client.var [opponent].coins = coins + random
+                    cookieFightMessage = new Discord.MessageEmbed ()
                     .setAuthor('COOKIE FIGHT')
                     .setDescription('The battle was brutal.. cookies crumbled...')
                     .setFooter("You're the best cookie worrior!")
@@ -184,20 +336,30 @@ client.on('message', message => {
                     .addField("you have won the cookie fight!! You stole "+random+" coins from "+loser+"! :D")
                     .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
                     .setColor('#f5e042')
-                coins = client.var [opponent].coins
-                client.var [opponent].coins = coins + random
-                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                    if (err) throw err;
-                });
-                coins2 = client.var [message.author.username].coins 
-                client.var [message.author.username].coins = coins2 - random
-                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                    if (err) throw err;
-                });
-                channel.send(cookieFightMessage)
-                return;
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    });
+                    coins2 = client.var [message.author.username].coins 
+                    client.var [message.author.username].coins = coins2 - random
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    });
+                    channel.send(cookieFightMessage)
+                    return;
+                };
             };
         };
+    };
+
+    if (message.content.startsWith(PREFIX+"test3 3")) {
+        it = message.content.split(' ').slice(2)
+        isObjectEmpty(it, message);
+        /*if () {
+            message.channel.send("There is no third value");
+        }
+        else {
+            message.channel.send(it)
+        };*/
     };
 
     if (message.content.includes("rip")) {
@@ -355,7 +517,7 @@ try{
             case 'shop':
                 channel.send("Here is what we have available:\n-Tonk: \nCost: 50\nAdds: 50 cool points\n-Cookie:\nCosts: 10\nAdds: 10 cool points\n Type \""+PREFIX+"buy (item name)\"")
                 break;
-            case 'inventory':
+            case 'inv':
                 if (!client.var [message.author.username].inventory.cookies) {
                     channel.send("You dont have any cookies.")
                     break;
@@ -385,6 +547,18 @@ try{
                 .setColor('#f5e042')
                 channel.send(embed1)
 
+            case 'test':
+                coin1 = 5
+                coin2 = 2
+                value0 = coin1 + coin2
+                value1 = coin1 / value0
+                channel.send(value0)
+                channel.send("Chances are: "+value1)
+                var rn = Math.random() * 1
+                channel.send(rn)
+                break;
+            case 'test3':
+                break;
             //==============================================================================================================================
             case 'displayx':
                 channel.send(xPos)
@@ -543,6 +717,13 @@ try{
 //        }
 //    }
 //}
+
+function isObjectEmpty(obj, message) {
+    if (Object.keys(obj).length === 0) {
+        message.channel.send("Its empty?")
+    }
+    //return Object.keys(obj).length === 0;
+}
 
 function sendLocation(message) {
     message.channel.send(new Discord.MessageAttachment("./images/mazes/0/" + (xPos - 1 + (yPos - 1) * 5) + ".png"))
