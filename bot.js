@@ -57,7 +57,8 @@ client.on('message', message => {
         client.var [message.author.id] = {
             coins: moneys,
             message: emptyMessage,
-            inventory: emptyMessage
+            inventory: emptyMessage,
+            bank: 0
         };
         fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
             if (err) throw err;
@@ -73,11 +74,14 @@ client.on('message', message => {
         });
     };
     
+    //numberOfWords = message.content.split(' ')
+    //numberOfCoins = parseInt(numberOfWords.length)
+    /*randomCoin = Math.floor (Math.random() * (10))
     moneys = client.var [message.author.id].coins 
-    client.var [message.author.id].coins = moneys + 1;
+    client.var [message.author.id].coins = moneys + randomCoin;
     fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
         if (err) throw err;
-    });
+    });*/
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  BUY COOKIE  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 /*if (message.content.startsWith(PREFIX+"buy cookie"))
@@ -337,20 +341,9 @@ client.on('message', message => {
             //item1 = message.author.id
             //challengerMention = "<@"+item1+">"
             challengerMention = message.author.id
-            if (!client.var [message.author.id].inventory.cookies){
-            message.channel.send("You have no cookies")
-                if (!client.var [opponent].inventory.cookies) {
-                    message.channel.send("Neither of you have any cookies!! Go to the shop to buy one.")
-                    return;
-                }
-                else {
-                    message.reply("you dont have any cookies!")
-                    return;
-                };
-            }
-            else if (!client.var [opponent].inventory.cookies){
-                message.channel.send("Your opponent doesn't have any cookies!")
-                return;
+            if (!client.var [opponent]){
+            message.channel.send("I don't recognize this user!")
+            return;
             }
             else {
                 var random = Math.floor (Math.random() * (50))
@@ -488,7 +481,90 @@ client.on('message', message => {
     };
 
 
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  BANK  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+    if (message.content.startsWith(PREFIX+"bank")) {//look for the command
+        command = message.content.split(' ').slice(1)
+        if (Object.keys(command).length === 0) {//check to see if they didnt have an extra argument: they dont
+        }
+        else {//they have another argument
+            if (message.content.startsWith(PREFIX+"bank deposit")){//check if they want to deposit: they do
+                mon = message.content.split(' ').slice(2)
+                number = parseInt(message.content.split(' ').slice(2))
+                actualCoins = parseInt(client.var [message.author.id].coins)
+                if ((Object.keys(mon).length === 0) || (isNaN(number))) {//check to see if they put a number value or any value at all: they didnt
+                    totalCoins = parseInt(client.var [message.author.id].coins)
+                    currentBankBalance = parseInt(client.var [message.author.id].bank)
+                    client.var [message.author.id].bank = totalCoins + currentBankBalance
+                    client.var [message.author.id].coins = 0
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    });
+                    message.channel.send(totalCoins+" Coins Deposited to the Bank!")
+                    return;
+
+                }
+                else {// they put in a specific number value
+                    if (number > actualCoins) {//check to see if they are trying to deposit more than they actually have: they are
+                        message.channel.send("You dont have "+number+" coins to deposit!")
+                        return;
+                    }
+                    if (number < actualCoins - 1) {//they have anough coins
+                        currentBankBalance = parseInt(client.var [message.author.id].bank)
+                        client.var [message.author.id].coins = actualCoins - number
+                        client.var [message.author.id].bank = currentBankBalance + number
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        });
+                        message.channel.send(number+" coins successfully deposited!")
+                        return;
+
+                    };
+                };
+            }
+            if (message.content.startsWith(PREFIX+"bank withdraw")) {// check if they want to withdraw: they do
+                mon = message.content.split(' ').slice(2)
+                number = parseInt(message.content.split(' ').slice(2))
+                actualCoins = parseInt(client.var [message.author.id].coins)
+                if ((Object.keys(mon).length === 0) || (isNaN(number))) {//check to see if they put a number value or any value at all: they didnt
+                    totalCoins = parseInt(client.var [message.author.id].coins)
+                    totalCoins1 = totalCoins
+                    totalBankBalance = parseInt(client.var [message.author.id].bank)
+                    client.var [message.author.id].coins = totalCoins + totalBankBalance
+                    client.var [message.author.id].bank = 0
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                    });
+                    message.channel.send(totalCoins1+" Coins Withdrawn from the Bank!")
+                    return;
+
+                }
+                else {// they put in a specific number value
+                    currentBankBalance = parseInt(client.var [message.author.id].bank)
+                    if (number > currentBankBalance) {//check to see if they are trying to deposit more than they actually have: they are
+                        message.channel.send("You dont have "+number+" coins to withdraw!")
+                        return;
+                    }
+                    if (number < currentBankBalance + 1) {//they have anough coins
+                        currentCoins = parseInt(client.var [message.author.id].coins)
+                        currentBankBalance = parseInt(client.var [message.author.id].bank)
+                        client.var [message.author.id].bank = currentBankBalance - number
+                        client.var [message.author.id].coins = currentCoins + number
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        });
+                        message.channel.send(number+" coins successfully withdrawn!")
+                        return;
+
+                    };
+                };
+            };
+        };
+    };
+
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
     if (message.content.startsWith(PREFIX+"test3 3")) {
         it = parseInt(message.content.split(' ').slice(2))
 
@@ -678,7 +754,7 @@ try{
                 .setDescription("Here is what we have for sale!")
                 .addField("-Cookies: \"Just your average living cookie.. what?\" \nGet more cookies so you can have more than everyone else; \nThe person with the most cookies has a higher chance of winning heists and battles! \nPrice(in coins):",cookiePrice)
                 .addField("-Tonks: \"Tonk you very much sir, for blowing up my enemies.\" \nTougher than 10 cookies, Tonks are the ultimate fighters. \nBe careful when saving for one, as your money will be left to steal! \nPrice(in coins):",tonkPrice)
-                .addField("-Duct Tape Rolls: \"Broken robot part? DUCT TAPE! Scraped knee? DUCT TAPE!\" \nDuct-tape your coins to the gound, your coins will be harder to steal! \nDuct-tape is sticky, if an enemy beats you they could get more gold! \nPrice(in coins):",tapePrice)
+                .addField("-Duct Tape Rolls: \"Broken robot part? DUCT TAPE! Scraped knee? DUCT TAPE!\" \nDuct-tape your coins to the gound, your coins will be harder to steal! \nDuct-tape is sticky, if an enemy beats you they could get more coins! \nPrice(in coins):",tapePrice)
                 .addField("-Robotic Arms: \"Now I don't need my real flimsy squishy arms!\"*chop*\"OOWW-\" \nRobotic arms are better for stealing. \nRobotic arms increase your chances of pulling off a heist or winning a fight! \nPrice(in coins):",armPrice)
                 .setColor('#f5e042')
                 channel.send(shopMessage)
@@ -698,6 +774,17 @@ try{
                 .addField("**Robotic Arms: **", ArmCount)
                 .setColor('#f5e042')
                 channel.send(invMessage)
+                break;
+            case 'bank':
+                coinsInBank = parseInt(client.var [message.author.id].bank)
+                user = message.author.id
+                bankMessage = new Discord.MessageEmbed ()
+                    .setAuthor('Bank')
+                    .setDescription('<@'+user+'>')
+                    .addField("**Money in the Bank: **", coinsInBank)
+                    .setThumbnail("https://media.discordapp.net/attachments/726550648660688979/730848313309659226/bank_door.jpg")
+                    .setColor('#f5e042')
+                channel.send(bankMessage)
                 break;
 
             case 'buy':
