@@ -62,7 +62,15 @@ client.on('message', message => {
         fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
             if (err) throw err;
         });
-        
+        client.var [message.author.id].inventory = {
+            cookies: 0,
+            tonks: 0,
+            ducttape: 0,
+            longarm: 0
+         }
+         fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+            if (err) throw err;
+        });
     };
     
     moneys = client.var [message.author.id].coins 
@@ -72,97 +80,238 @@ client.on('message', message => {
     });
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  BUY COOKIE  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    if (message.content.startsWith(PREFIX+"buy cookie")) {
-        numberOfC = message.content.split(' ').slice(2)
-        if (Object.keys(numberOfC).length === 0) {
+/*if (message.content.startsWith(PREFIX+"buy cookie"))
             //message.channel.send("There isnt a number value")
-            numberOfC = 1
-            if(!client.var [message.author.id].inventory.cookies) {
-                client.var [message.author.id].inventory = {
-                   cookies: 0
-                }
-                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                    if (err) throw err;
-                });
-                if (client.var [message.author.id].coins > 9) {
-                    moneys = client.var [message.author.id].coins 
-                    client.var [message.author.id].coins = moneys - 10
-                    cookies = client.var [message.author.id].inventory.cookies
-                    client.var [message.author.id].inventory.cookies = cookies + 1
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                        message.channel.send("1 cookie Purchased!");
-                    });
-                    return;
-                }
-                if (client.var [message.author.id].coins < 10) {
-                    message.channel.send("You don't have enough coins!")
-                    return;
-                };
-            }
-            else {
-                if (client.var [message.author.id].coins < 10) {
-                    message.channel.send("You don't have enough coins!")
-                }
-                if (client.var [message.author.id].coins > 9) {
-                    moneys = client.var [message.author.id].coins 
-                    client.var [message.author.id].coins = moneys - 10
-                    cookies = client.var [message.author.id].inventory.cookies
-                    client.var [message.author.id].inventory.cookies = cookies + 1
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                        message.channel.send(numberOfC+" cookie Purchased!");
-                    });
-                    return;
-                };
-            };
+            itemName = cookie
+            numberOfItems = parseInt(message.content.split(' ').slice(2))
+            totalCost = parseInt(numberOfItems * 10)
+            theItem = client.var [message.author.id].inventory.cookies
+            purchaseItem(message, numberOfItems, totalCost, theItem, itemName)*/
+
+    if (message.content.startsWith(PREFIX+"buy")) {//see if the user wants to buy something
+        buyItem = message.content.split(' ').slice(1)
+        if (Object.keys(buyItem).length === 0) {// check to see if they have chosen an item. They havent in this case
+            message.channel.send("Please select an item to purchase!")
+            return;
         }
-        else {
-            //message.channel.send("there is a number value")
-            numberOfC = parseInt(message.content.split(' ').slice(2))
-            //channel.send(numberOfC+" is how many cookies you are buying")
-            maths1 = message.content.split(' ').slice(2)
-            costC = maths1 * 10
-            //channel.send(costC+" is how much it will cost")
-            if(!client.var [message.author.id].inventory.cookies) {
-                client.var [message.author.id].inventory = {
-                   cookies: 0
-                }
-                fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                    if (err) throw err;
-                });
-                if (client.var [message.author.id].coins > costC - 1) {
-                    moneys = client.var [message.author.id].coins
-                    client.var [message.author.id].coins = moneys - costC
-                    cookies = parseInt(client.var [message.author.id].inventory.cookies)
-                    client.var [message.author.id].inventory.cookies = cookies + numberOfC
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                        message.channel.send(numberOfC+" cookies Purchased!");
-                    });
+        else {// the user has selected an item.
+            numberOfI = message.content.split(' ').slice(2)
+            numberofIN = parseInt(message.content.split(' ').slice(2))
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  BUY COOKIE  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+            if (message.content.startsWith(PREFIX+"buy cookie")) {// check if they've selected cookie: they have
+                if((Object.keys(numberOfI).length === 0) || (isNaN(numberofIN))) {//check to see if they've set a number to how many they want to buy: they havent.
+                    numberOfItems = 1
+                    itemName = "Cookie"
+                    totalCost = parseInt(numberOfItems * 10)
+                    theItem = client.var [message.author.id].inventory.cookies
+
+                    if (client.var [message.author.id].coins < totalCost) {
+                        message.channel.send("You don't have enough coins!")
+                        return;
+                    }
+                    if (client.var [message.author.id].coins > totalCost) {
+                        moneys = client.var [message.author.id].coins 
+                        spend = parseInt(totalCost)
+                        client.var [message.author.id].coins = moneys - spend
+                        numberOfPrevious = parseInt(theItem)
+                        client.var [message.author.id].inventory.cookies = numberOfPrevious + numberOfItems
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                            message.channel.send(numberOfItems+" "+itemName+" Purchased!");
+                            return;
+                        });
+                    };
+
                     return;
                 }
-                if (client.var [message.author.id].coins < costC) {
-                    message.channel.send("You don't have enough coins to buy "+numberOfC+" cookies!")
+                else {//they've selected a number
+                itemName = "Cookies"
+                numberOfItems = parseInt(message.content.split(' ').slice(2))
+                totalCost = parseInt(numberOfItems * 10)
+                
+                if (client.var [message.author.id].coins < totalCost) {
+                    message.channel.send("You don't have enough coins!")
                     return;
-                };
-            }
-            else {
-                if (client.var [message.author.id].coins < costC - 1) {
-                    message.channel.send("You don't have enough coins to buy "+numberOfC+" cookies!")
                 }
-                if (client.var [message.author.id].coins > costC ) {
+                if (client.var [message.author.id].coins > totalCost) {
                     moneys = client.var [message.author.id].coins 
-                    client.var [message.author.id].coins = moneys - costC
-                    cookies = parseInt(client.var [message.author.id].inventory.cookies)
-                    client.var [message.author.id].inventory.cookies = cookies + numberOfC
-                    randomitem = numberOfC + cookies
-                    //channel.send(randomitem+" is how many cookies added. From the combination of total numbers chosen: "+ numberOfC+" and how many cookies you already have: "+ cookies)
+                    spend = parseInt(totalCost)
+                    client.var [message.author.id].coins = moneys - spend
+                    numberOfPrevious = parseInt(theItem)
+                    client.var [message.author.id].inventory.cookies = numberOfPrevious + numberOfItems
                     fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
                         if (err) throw err;
-                        message.channel.send(numberOfC+" cookies Purchased!");
+                        message.channel.send(numberOfItems+" "+itemName+" Purchased!");
+                        return;
                     });
                 };
+                
+
+                return;
+                }
+            }
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  BUY TONK  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+            else if (message.content.startsWith(PREFIX+"buy tonk")) {//check if theyve selected tonk: they have
+                if((Object.keys(numberOfI).length === 0) || (isNaN(numberofIN))) {//check to see if they've set a number to how many they want to buy: they havent.
+                    numberOfItems = 1
+                    itemName = "Tonk"
+                    totalCost = parseInt(numberOfItems * 100)
+                    theItem = client.var [message.author.id].inventory.tonks
+
+                    if (client.var [message.author.id].coins < totalCost) {
+                        message.channel.send("You don't have enough coins!")
+                        return;
+                    }
+                    if (client.var [message.author.id].coins > totalCost) {
+                        moneys = parseInt(client.var [message.author.id].coins) 
+                        client.var [message.author.id].coins = moneys - totalCost
+                        numberOfPrevious = parseInt(theItem)
+                        client.var [message.author.id].inventory.tonks = numberOfPrevious + numberOfItems
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                            message.channel.send(numberOfItems+" "+itemName+" Purchased!");
+                            return;
+                        });
+                    };
+
+                    return;
+                }
+                else {//they've selected a number
+                itemName = "Tonks"
+                numberOfItems = parseInt(message.content.split(' ').slice(2))
+                totalCost = parseInt(numberOfItems * 100)
+                theItem = client.var [message.author.id].inventory.tonks
+                
+                if (client.var [message.author.id].coins < totalCost) {
+                    message.channel.send("You don't have enough coins!")
+                    return;
+                }
+                if (client.var [message.author.id].coins > totalCost) {
+                    moneys = client.var [message.author.id].coins 
+                    spend = parseInt(totalCost)
+                    client.var [message.author.id].coins = moneys - spend
+                    numberOfPrevious = parseInt(theItem)
+                    client.var [message.author.id].inventory.tonks = numberOfPrevious + numberOfItems
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                        message.channel.send(numberOfItems+" "+itemName+" Purchased!");
+                        return;
+                    });
+                };
+                
+
+                return;
+                }
+            }
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  BUY TAPE  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+            else if (message.content.startsWith(PREFIX+"buy tape")) {// check to see if theyve selected ducttape: they have
+                if((Object.keys(numberOfI).length === 0) || (isNaN(numberofIN))) {//check to see if they've set a number to how many they want to buy: they havent.
+                    numberOfItems = 1
+                    itemName = "Roll of Duct Tape"
+                    totalCost = parseInt(numberOfItems * 50)
+                    theItem = client.var [message.author.id].inventory.ducttape
+
+                    if (client.var [message.author.id].coins < totalCost) {
+                        message.channel.send("You don't have enough coins!")
+                        return;
+                    }
+                    if (client.var [message.author.id].coins > totalCost) {
+                        moneys = client.var [message.author.id].coins 
+                        spend = parseInt(totalCost)
+                        client.var [message.author.id].coins = moneys - spend
+                        numberOfPrevious = parseInt(theItem)
+                        client.var [message.author.id].inventory.ducttape = numberOfPrevious + numberOfItems
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                            message.channel.send(numberOfItems+" "+itemName+" Purchased!");
+                            return;
+                        });
+                    };
+
+                    return;
+                }
+                else {//they've selected a number
+                itemName = "Rolls of Duct Tape"
+                numberOfItems = parseInt(message.content.split(' ').slice(2))
+                totalCost = parseInt(numberOfItems * 50)
+                
+                if (client.var [message.author.id].coins < totalCost) {
+                    message.channel.send("You don't have enough coins!")
+                    return;
+                }
+                if (client.var [message.author.id].coins > totalCost) {
+                    moneys = client.var [message.author.id].coins 
+                    spend = parseInt(totalCost)
+                    client.var [message.author.id].coins = moneys - spend
+                    numberOfPrevious = parseInt(theItem)
+                    client.var [message.author.id].inventory.ducttape = numberOfPrevious + numberOfItems
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                        message.channel.send(numberOfItems+" "+itemName+" Purchased!");
+                        return;
+                    });
+                };
+                
+
+                return;
+                }
+            }
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  BUY ARM  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+            else if (message.content.startsWith(PREFIX+"buy arm")) {// check to see if theyve selected a robot arm: they have
+                if((Object.keys(numberOfI).length === 0) || (isNaN(numberofIN))) {//check to see if they've set a number to how many they want to buy: they havent.
+                    numberOfItems = 1
+                    itemName = "Robotic Arm"
+                    totalCost = parseInt(numberOfItems * 50)
+                    theItem = client.var [message.author.id].inventory.longarm
+
+                    if (client.var [message.author.id].coins < totalCost) {
+                        message.channel.send("You don't have enough coins!")
+                        return;
+                    }
+                    if (client.var [message.author.id].coins > totalCost) {
+                        moneys = client.var [message.author.id].coins 
+                        spend = parseInt(totalCost)
+                        client.var [message.author.id].coins = moneys - spend
+                        numberOfPrevious = parseInt(theItem)
+                        client.var [message.author.id].inventory.longarm = numberOfPrevious + numberOfItems
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                            message.channel.send(numberOfItems+" "+itemName+" Purchased!");
+                            return;
+                        });
+                    };
+
+                    return;
+                }
+                else {//they've selected a number
+                itemName = "Robotic Arms"
+                numberOfItems = parseInt(message.content.split(' ').slice(2))
+                totalCost = parseInt(numberOfItems * 50)
+                
+                if (client.var [message.author.id].coins < totalCost) {
+                    message.channel.send("You don't have enough coins!")
+                    return;
+                }
+                if (client.var [message.author.id].coins > totalCost) {
+                    moneys = client.var [message.author.id].coins 
+                    spend = parseInt(totalCost)
+                    client.var [message.author.id].coins = moneys - spend
+                    numberOfPrevious = parseInt(theItem)
+                    client.var [message.author.id].inventory.longarm = numberOfPrevious + numberOfItems
+                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                        if (err) throw err;
+                        message.channel.send(numberOfItems+" "+itemName+" Purchased!");
+                        return;
+                    });
+                };
+                
+
+                return;
+                }
+            }
+            else {//for if the user sends an inavlid item name
+                message.channel.send("This is not a valid item! Check <"+PREFIX+"shophelp> for more help!")
+                return;
             };
         };
     };
@@ -341,8 +490,24 @@ client.on('message', message => {
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     if (message.content.startsWith(PREFIX+"test3 3")) {
-        it = message.content.split(' ').slice(2)
-        isObjectEmpty(it, message);
+        it = parseInt(message.content.split(' ').slice(2))
+
+        if (isNaN(it)) {
+            message.channel.send("Value is not a number!")
+            return;
+        }
+        else {
+            message.channel.send("Value is a number ("+it+")")
+            return;
+        };
+        /*if(typeof(it)=="number") {
+            message.channel.send("Value is a numeber")
+            return;
+        }
+        else {
+            message.channel.send("Value is not a number")
+            return;
+        };
         /*if () {
             message.channel.send("There is no third value");
         }
@@ -351,7 +516,7 @@ client.on('message', message => {
         };*/
     };
 
-    if (message.content.includes("rip")) {
+    if (message.content.startsWith("rip")) {
         message.channel.send(new Discord.MessageAttachment("./images/randomimages/tombstone.jpg"));
     };
 try{
@@ -504,18 +669,36 @@ try{
                 channel.send("You balance is currently: "+_moneymessage+" (coins earned from messages sent)")
                 break;
             case 'shop':
-                channel.send("Here is what we have available:\n-Tonk: \nCost: 50\nAdds: 50 cool points\n-Cookie:\nCosts: 10\nAdds: 10 cool points\n Type \""+PREFIX+"buy (item name)\"")
+                cookiePrice = 10
+                tonkPrice = 100
+                tapePrice = 50
+                armPrice = 50
+                shopMessage = new Discord.MessageEmbed ()
+                .setAuthor('Shop')
+                .setDescription("Here is what we have for sale!")
+                .addField("-Cookies: \"Just your average living cookie.. what?\" \nGet more cookies so you can have more than everyone else; \nThe person with the most cookies has a higher chance of winning heists and battles! \nPrice(in coins):",cookiePrice)
+                .addField("-Tonks: \"Tonk you very much sir, for blowing up my enemies.\" \nTougher than 10 cookies, Tonks are the ultimate fighters. \nBe careful when saving for one, as your money will be left to steal! \nPrice(in coins):",tonkPrice)
+                .addField("-Duct Tape Rolls: \"Broken robot part? DUCT TAPE! Scraped knee? DUCT TAPE!\" \nDuct-tape your coins to the gound, your coins will be harder to steal! \nDuct-tape is sticky, if an enemy beats you they could get more gold! \nPrice(in coins):",tapePrice)
+                .addField("-Robotic Arms: \"Now I don't need my real flimsy squishy arms!\"*chop*\"OOWW-\" \nRobotic arms are better for stealing. \nRobotic arms increase your chances of pulling off a heist or winning a fight! \nPrice(in coins):",armPrice)
+                .setColor('#f5e042')
+                channel.send(shopMessage)
                 break;
             case 'inv':
-                if (!client.var [message.author.id].inventory.cookies) {
-                    channel.send("You dont have any cookies.")
-                    break;
-                }
-                else {
-                    cookieCount = client.var [message.author.id].inventory.cookies
-                    channel.send("You have "+cookieCount+" cookies!")
-                    break;
-                }
+                user = message.author.id
+                cookieCount = client.var [message.author.id].inventory.cookies
+                tonkCount = client.var [message.author.id].inventory.tonks
+                tapeCount = client.var [message.author.id].inventory.ducttape
+                ArmCount = client.var [message.author.id].inventory.longarm
+                invMessage = new Discord.MessageEmbed ()
+                .setAuthor('Inventory')
+                .setDescription('<@'+user+'>')
+                .addField("**Cookies: **", cookieCount)
+                .addField("**Tonks: **", tonkCount)
+                .addField("**Duct Tape Rolls: **", tapeCount)
+                .addField("**Robotic Arms: **", ArmCount)
+                .setColor('#f5e042')
+                channel.send(invMessage)
+                break;
 
             case 'buy':
                 break;
@@ -549,7 +732,7 @@ try{
             case 'test3':
                 break;
             //==============================================================================================================================
-            case 'displayx':
+            /*case 'displayx':
                 channel.send(xPos)
                 break;
             case 'displayy':
@@ -718,12 +901,22 @@ try{
 //    }
 //}
 
-/*function isObjectEmpty(obj, message) {
-    if (Object.keys(obj).length === 0) {
-        message.channel.send("Its empty?")
+function purchaseItem(message, numberOfItems, totalCost, theItem, itemName) {
+    if (client.var [message.author.id].coins < totalCost) {
+        message.channel.send("You don't have enough coins!")
     }
-    //return Object.keys(obj).length === 0;
-}*/
+    if (client.var [message.author.id].coins > totalCost) {
+        moneys = client.var [message.author.id].coins 
+        spend = parseInt(totalCost)
+        client.var [message.author.id].coins = moneys - spend
+        numberOfPrevious = parseInt(theItem)
+        theItem = numberOfPrevious + numberOfItems
+        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+            if (err) throw err;
+            message.channel.send(numberOfItems+" "+itemName+" Purchased!");
+        });
+    };
+}
 
 function sendLocation(message) {
     message.channel.send(new Discord.MessageAttachment("./images/mazes/0/" + (xPos - 1 + (yPos - 1) * 5) + ".png"))
