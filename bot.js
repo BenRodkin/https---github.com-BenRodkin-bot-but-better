@@ -76,12 +76,12 @@ client.on('message', message => {
     
     //numberOfWords = message.content.split(' ')
     //numberOfCoins = parseInt(numberOfWords.length)
-    /*randomCoin = Math.floor (Math.random() * (10))
+    randomCoin = Math.floor (Math.random() * (10))
     moneys = client.var [message.author.id].coins 
     client.var [message.author.id].coins = moneys + randomCoin;
     fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
         if (err) throw err;
-    });*/
+    });
 
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  BUY COOKIE  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 /*if (message.content.startsWith(PREFIX+"buy cookie"))
