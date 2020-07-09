@@ -132,6 +132,7 @@ client.on('message', message => {
                 itemName = "Cookies"
                 numberOfItems = parseInt(message.content.split(' ').slice(2))
                 totalCost = parseInt(numberOfItems * 10)
+                numberOfPrevious = parseInt(client.var [message.author.id].inventory.cookies)
                 
                 if (client.var [message.author.id].coins < totalCost) {
                     message.channel.send("You don't have enough coins!")
