@@ -1,28 +1,30 @@
 {
     "380364910078459905": {
-        "coins": 7,
+        "coins": 2,
         "message": "(None)",
         "inventory": {
-            "cookies": 96
+            "cookies": 115
         }
     },
     "364590637993033731": {
-        "coins": 130,
-        "message": "(None)",
-        "inventory": "(None)"
-    },
-    "400433374596038667": {
-        "coins": 5,
+        "coins": 163,
         "message": "(None)",
         "inventory": {
-            "cookies": 200
+            "cookies": 21
+        }
+    },
+    "400433374596038667": {
+        "coins": 39,
+        "message": "(None)",
+        "inventory": {
+            "cookies": 206
         }
     },
     "627852058845904927": {
-        "coins": 7,
+        "coins": 29,
         "message": "(None)",
         "inventory": {
-            "cookies": 93
+            "cookies": 98
         }
     },
     "702275663197110332": {
@@ -31,5 +33,10 @@
         "inventory": {
             "cookies": 7
         }
+    },
+    "711396658776113182": {
+        "coins": 3,
+        "message": "(None)",
+        "inventory": "(None)"
     }
 }

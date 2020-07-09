@@ -9,7 +9,7 @@ const { isNullOrUndefined, isUndefined } = require('util');
 const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require('constants');
 client.var = require ('./data/users/var.json');
 
-const PREFIX = 'a!';
+const PREFIX = 'c!';
 
 client.on('ready', function (evt) {
     console.log(`Loggid in as ${client.user.tag}!`);
@@ -168,131 +168,138 @@ client.on('message', message => {
     };
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  COOKIE HEIST  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     if (message.content.startsWith(PREFIX+'cookie heist')) {
-        winner = 0
-        random = 0
-        cookieFightMessage = new Discord.MessageEmbed ()
-        .setAuthor('COOKIE FIGHT')
-        .setDescription('The battle was brutal.. cookies crumbled...')
-        .setFooter("You're the best cookie worrior!")
-        .addField(winner+", you have won the cookie fight!! You have earned "+random+" coins! :D")
-        .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-        .setColor('#f5e042')
-        opponent = message.mentions.users.first().id
-        enemyMention = message.mentions.users.first()
-        //item1 = message.author.id
-        //challengerMention = "<@"+item1+">"
-        challengerMention = message.author.id
-        if (!client.var [message.author.id].inventory.cookies){
-            channel.send("You have no cookies")
-            if (!client.var [opponent].inventory.cookies) {
-                channel.send("Neither of you have any cookies!! Go to the shop to buy one.")
-                return;
-            }
-            else {
-                message.reply("you dont have any cookies!")
-                return;
-            };
-        }
-        else if (!client.var [opponent].inventory.cookies){
-            channel.send("Your opponent doesn't have any cookies!")
+        mention = message.content.split(' ').slice(2)
+        if (Object.keys(mention).length === 0) {
+            message.channel.send("You need to mention someone!")
             return;
         }
         else {
-            var random = Math.floor (Math.random() * (50))
-            var rn = Math.random() * 100
-            challenger = client.var [message.author.id].inventory.cookies
-            enemy = client.var [opponent].inventory.cookies
-            winnerVar0 = challenger + enemy
-            winnerVar = challenger / winnerVar0 * 100
-            /*channel.send(challenger)
-            channel.send(enemy)
-            channel.send(winnerVar.toFixed(3))*/
-            if (winnerVar > rn) { //sender won
-                winner = message.author.id
-                loser = message.mentions.users.first().username
-                if (client.var[opponent].coins < random) {
-                    coins = client.var [message.author.id].coins
-                    gained = client.var [opponent].coins
-                    cookieFightMessage = new Discord.MessageEmbed ()
-                        .setAuthor('COOKIE HEIST')
-                        .setFooter("You're the best cookie thief!")
-                        .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+random+' coins from '+loser+'! :D**')
-                        .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-                        .setColor('#f5e042')
-                    client.var [message.author.id].coins = coins + gained
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                    });
-                    client.var [opponent].coins = 0
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                    });
-                    channel.send(cookieFightMessage)
+            winner = 0
+            random = 0
+            cookieFightMessage = new Discord.MessageEmbed ()
+            .setAuthor('COOKIE FIGHT')
+            .setDescription('The battle was brutal.. cookies crumbled...')
+            .setFooter("You're the best cookie worrior!")
+            .addField(winner+", you have won the cookie fight!! You have earned "+random+" coins! :D")
+            .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+            .setColor('#f5e042')
+            opponent = message.mentions.users.first().id
+            enemyMention = message.mentions.users.first()
+            //item1 = message.author.id
+            //challengerMention = "<@"+item1+">"
+            challengerMention = message.author.id
+            if (!client.var [message.author.id].inventory.cookies){
+            message.channel.send("You have no cookies")
+                if (!client.var [opponent].inventory.cookies) {
+                    message.channel.send("Neither of you have any cookies!! Go to the shop to buy one.")
                     return;
                 }
                 else {
-                    cookieFightMessage = new Discord.MessageEmbed ()
-                        .setAuthor('COOKIE HEIST')
-                        .setFooter("You're the best cookie thief!")
-                        .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+random+' coins from '+loser+'! :D**')
-                        .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-                        .setColor('#f5e042')
-                    coins = client.var [message.author.id].coins
-                    client.var [message.author.id].coins = coins + random
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                    });
-                    coins2 = client.var [opponent].coins
-                    client.var [opponent].coins = coins2 - random
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                    });
-                    channel.send(cookieFightMessage)
+                    message.reply("you dont have any cookies!")
                     return;
                 };
             }
-            if (winnerVar < rn) { //the other person won, not sender
-                winner = message.mentions.users.first().id
-                loser = message.author.username
-                if (client.var [opponent].coins < random) {
-                    coins = parseInt(client.var [opponent].coins)
-                    gained = parseInt(client.var [message.author.id].coins)
-                    cookieFightMessage = new Discord.MessageEmbed ()
+            else if (!client.var [opponent].inventory.cookies){
+                message.channel.send("Your opponent doesn't have any cookies!")
+                return;
+            }
+            else {
+                var random = Math.floor (Math.random() * (50))
+                var rn = Math.random() * 100
+                challenger = client.var [message.author.id].inventory.cookies
+                enemy = client.var [opponent].inventory.cookies
+                winnerVar0 = challenger + enemy
+                winnerVar = parseInt(challenger / winnerVar0 * 100)
+                /*channel.send(challenger)
+                channel.send(enemy)
+                channel.send(winnerVar.toFixed(3))*/
+                if (winnerVar > rn) { //sender won
+                    winner = message.author.id
+                    loser = message.mentions.users.first().username
+                    if (client.var[opponent].coins < random) {
+                        coins = parseInt(client.var [message.author.id].coins)
+                        gained = parseInt(client.var [opponent].coins)
+                        cookieFightMessage = new Discord.MessageEmbed ()
+                            .setAuthor('COOKIE HEIST')
+                            .setFooter("You're the best cookie thief!")
+                            .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+gained+' coins from '+loser+'! :D**')
+                            .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                            .setColor('#f5e042')
+                        client.var [message.author.id].coins = coins + gained
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        });
+                        client.var [opponent].coins = 0
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        });
+                        message.channel.send(cookieFightMessage)
+                        return;
+                    }
+                    else {
+                        cookieFightMessage = new Discord.MessageEmbed ()
+                            .setAuthor('COOKIE HEIST')
+                            .setFooter("You're the best cookie thief!")
+                            .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+random+' coins from '+loser+'! :D**')
+                            .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                            .setColor('#f5e042')
+                        coins = client.var [message.author.id].coins
+                        client.var [message.author.id].coins = coins + random
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        });
+                        coins2 = client.var [opponent].coins
+                        client.var [opponent].coins = coins2 - random
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        });
+                        message.channel.send(cookieFightMessage)
+                        return;
+                    };
+                }
+                if (winnerVar < rn) { //the other person won, not sender
+                    winner = message.mentions.users.first().id
+                    loser = message.author.username
+                    if (client.var [opponent].coins < random) {
+                        coins = parseInt(client.var [opponent].coins)
+                        gained = parseInt(client.var [message.author.id].coins)
+                        cookieFightMessage = new Discord.MessageEmbed ()
+                            .setAuthor('COOKIE HEIST')
+                            .setFooter("You're the best cookie thief!")
+                            .setDescription("**<@"+winner+"> the battle was brutal.. cookies crumbled...\nYou have won the cookie fight!! You stole "+gained+" coins from "+loser+"! :D**")
+                            .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                            .setColor('#f5e042')
+                        client.var [opponent].coins = coins + gained
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        }); 
+                        client.var [message.author.id].coins = 0
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        });
+                        channel.send(cookieFightMessage)
+                        return;
+                    }
+                    else {
+                        coins = parseInt(client.var [opponent].coins)
+                        client.var [opponent].coins = coins + random
+                        cookieFightMessage = new Discord.MessageEmbed ()
                         .setAuthor('COOKIE HEIST')
                         .setFooter("You're the best cookie thief!")
-                        .setDescription("**<@"+winner+"> the battle was brutal.. cookies crumbled...\nYou have won the cookie fight!! You stole "+gained+" coins from "+loser+"! :D**")
+                        .setDescription("**<@"+winner+"> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole "+random+" coins from "+loser+"! :D**")
                         .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
                         .setColor('#f5e042')
-                    client.var [opponent].coins = coins + gained
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                    }); 
-                    client.var [message.author.id].coins = 0
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                    });
-                    channel.send(cookieFightMessage)
-                    return;
-                }
-                else {
-                    coins = parseInt(client.var [opponent].coins)
-                    client.var [opponent].coins = coins + random
-                    cookieFightMessage = new Discord.MessageEmbed ()
-                    .setAuthor('COOKIE HEIST')
-                    .setFooter("You're the best cookie thief!")
-                    .setDescription("**<@"+winner+"> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole "+random+" coins from "+loser+"! :D**")
-                    .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-                    .setColor('#f5e042')
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                    });
-                    coins2 = client.var [message.author.id].coins 
-                    client.var [message.author.id].coins = coins2 - random
-                    fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
-                        if (err) throw err;
-                    });
-                    channel.send(cookieFightMessage)
-                    return;
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        });
+                        coins2 = client.var [message.author.id].coins 
+                        client.var [message.author.id].coins = coins2 - random
+                        fs.writeFile ("./data/users/var.json", JSON.stringify(client.var,null,4), err => {
+                            if (err) throw err;
+                        });
+                        message.channel.send(cookieFightMessage)
+                        return;
+                    };
                 };
             };
         };
@@ -300,7 +307,35 @@ client.on('message', message => {
 //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  COOKIE FIGHT  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     if (message.content.startsWith(PREFIX+"cookie fight")) {
+        enemyMention = message.content.split(' ').slice(2)
+        messageMention = message.mentions.users.first()
 
+        if ((Object.keys(enemyMention).length === 0) || (messageMention == null)) { //check to see if there is a mention, there isnt one here
+            message.channel.send("You must mention a user!")
+            return;
+        }
+        else {// there is a mention
+            enemyId = message.mentions.users.first().id
+            enemyMention = message.mentions.users.first()
+            enemyUsername = message.mentions.users.first().username
+            challengerId = message.author.id
+            challenderUsername = message.author.username
+            if (!client.var[enemyId]) {//check if they are registered in var.json, they arent.
+                message.channel.send("I don't recognize this user! They should buy some cookies...")
+                return;
+            }
+            else {//they are registered in var.json
+                if (!client.var [enemyId].inventory.cookies) {//check to see if they have any cookies, they dont.
+                    message.channel.send("Your opponent doesn't have any cookies! They should buy some...")
+                    return;
+                }
+                else {//they have a number of cookies
+                    message.channel.send("They have cookies")
+                    return;
+                }
+            };
+            
+        };
     };
 
 
