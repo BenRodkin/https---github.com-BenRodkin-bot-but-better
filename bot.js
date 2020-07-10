@@ -66,7 +66,11 @@ client.on('message', message => {
     //numberOfWords = message.content.split(' ')
     //numberOfCoins = parseInt(numberOfWords.length)
 
-    purchaseItem(message, ["coin", auth.token, Math.round(Math.random() * 3 + 0.7)]);
+    //fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+    //    if (err) throw err;
+    //});
+
+    buyItem(message, ["coin", auth.token, Math.round(Math.random() * 3 + 0.7)]);
 
 
 // //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  COOKIE HEIST  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -229,13 +233,7 @@ client.on('message', message => {
 //
 //         };
 //     };
-//
-//
-// //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  BANK  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-//
-//
 
-//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     if (message.content.startsWith("rip")) {
         message.channel.send(new Discord.MessageAttachment("./images/randomimages/tombstone.jpg"));
@@ -302,25 +300,6 @@ try{
             case 'help':
                 channel.send("Here are some commands I have: \n w!help (brings up the wanderer help menu)\n a!delete <number> (deletes a number of messages) \n a!maze (allows you to play a maze game) \n a!spam <mention> <number> (mentions a given person a set number of times, still under construction) \n a!8ball <question> (a magic 8ball tells you your fate) \n a!ping (check the speed at which the bot responds)")
                 break;
-            case 'embed':
-                //const embed = new Discord.MessageEmbed ()
-                //.setAuthor('Emris')
-                //.setDescription('This is an embed')
-                //.setFooter('This was made in js')
-                //.attachFiles('./maze/blankmaze.gif')
-                //.setImage('https://media.discordapp.net/attachments/723667226778927136/727607580213510184/blankmaze2.png')
-                //.addField(new Discord.MessageAttachment('https://media.discordapp.net/attachments/727565988752523354/727568477954769037/x2y1large.png'))
-                //.setThumbnail(url = 'https://media.discordapp.net/attachments/727565988752523354/727568477954769037/x2y1large.png?width=1000&height=946')
-                //.setThumbnail(url = 'https://media.discordapp.net/attachments/726549559584751683/727189926986121246/blake.png', outerWidth = '249', outerHeight = '243')
-                //.setColor('#f5e042')
-            //channel.send(embed)
-                //    .setAuthor('Emris')
-                //    .setDescription('This is an embed')
-                //    .setFooter('This was made in js')
-                //    .addField('Hi there!')
-                //    .setThumbnail('./images/avitars/blake.png')
-                //    .setColor('#f5e042')
-                break;
 
             case 'delete':
                 let numberDelete = message.content.split(" ").slice(1).join(" ")
@@ -384,50 +363,6 @@ try{
             case 'read':
                 let messagesave = coinData[message.author.id].message
                 channel.send("Message is: "+ messagesave)
-                break;
-            case 'bal':
-                let _moneymessage = coinData[message.author.id].coins
-                channel.send("You balance is currently: "+_moneymessage+" (coins earned from messages sent)")
-                break;
-            case 'shop':
-                shopMessage = new Discord.MessageEmbed ()
-                .setAuthor('Shop')
-                .setDescription("Here is what we have for sale!")
-                .addField("-Cookies: \"Just your average living cookie.. what?\" \nGet more cookies so you can have more than everyone else; \nThe person with the most cookies has a higher chance of winning heists and battles! \nPrice(in coins):",cookiePrice)
-                .addField("-Tonks: \"Tonk you very much sir, for blowing up my enemies.\" \nTougher than 10 cookies, Tonks are the ultimate fighters. \nBe careful when saving for one, as your money will be left to steal! \nPrice(in coins):",tonkPrice)
-                .addField("-Duct Tape Rolls: \"Broken robot part? DUCT TAPE! Scraped knee? DUCT TAPE!\" \nDuct-tape your coins to the gound, your coins will be harder to steal! \nDuct-tape is sticky, if an enemy beats you they could get more coins! \nPrice(in coins):",tapePrice)
-                .addField("-Robotic Arms: \"Now I don't need my real flimsy squishy arms!\"*chop*\"OOWW-\" \nRobotic arms are better for stealing. \nRobotic arms increase your chances of pulling off a heist or winning a fight! \nPrice(in coins):",armPrice)
-                .setColor('#f5e042')
-                channel.send(shopMessage)
-                break;
-
-            case 'inv':
-                user = message.author.id
-                cookieCount = coinData [message.author.id].inventory.cookies
-                tonkCount = coinData [message.author.id].inventory.tonks
-                tapeCount = coinData [message.author.id].inventory.ducttape
-                ArmCount = coinData [message.author.id].inventory.longarm
-                invMessage = new Discord.MessageEmbed ()
-                .setAuthor('Inventory')
-                .setDescription('<@'+user+'>')
-                .addField("**Cookies: **", cookieCount)
-                .addField("**Tonks: **", tonkCount)
-                .addField("**Duct Tape Rolls: **", tapeCount)
-                .addField("**Robotic Arms: **", ArmCount)
-                .setColor('#f5e042')
-                channel.send(invMessage)
-                break;
-
-            case 'bank':
-                user = message.author.id
-                coinsInBank = parseInt(coinData [user].bank)
-                bankMessage = new Discord.MessageEmbed ()
-                    .setAuthor('Bank')
-                    .setDescription('<@'+user+'>')
-                    .addField("**Money in the Bank: **", coinsInBank)
-                    .setThumbnail("https://media.discordapp.net/attachments/726550648660688979/730848313309659226/bank_door.jpg")
-                    .setColor('#f5e042')
-                channel.send(bankMessage)
                 break;
 
                 //edit message by id
@@ -555,15 +490,28 @@ try{
         var args = cont.substring(ALT_PREFIX.length).toLowerCase().split(' ');
         var cmd = args.shift();
 console.log(1);
-
+    
         switch (cmd) {
+
+            case 'bal':
+                let _moneymessage = coinData[message.author.id].coins
+                channel.send("You balance is currently: "+_moneymessage+" (coins earned from messages sent)")
+                break;
+            case 'shop':
+                displayShop(message, cookiePrice, tonkPrice, tapePrice, armPrice)
+                break;
+
+            case 'inv':
+                displayInv(message)
+                break;
+                
             case 'buy':
             console.log(2.1);
                 buyItem(message, args);
 
                 break;
-            case 'hiest':
-                cookieHiest(message,args);
+            case 'heist':
+                cookieHeist(message,args);
                 break;
             case 'fight':
                 cookieFight(message,args);
@@ -586,17 +534,15 @@ console.log(1);
                     }
                 }
                 break;
-            case 'heist':
-                message.channel.send('Learn how to speel \'hiest\'.');
-                break;
             case 'start':
             console.log(2.6);
                 ensureUserInDB(user);
                 welcome = new Discord.MessageEmbed ()
-                .setAuthor('WELCOME!')
-                .setDescription('<@'+message.author.id+'>, Welcome to Cookie Land! Use <'+ALT_PREFIX+'help> for info on how to play!')
-                .setImage('https://media.discordapp.net/attachments/726550648660688979/731121120497106984/2Q.png')
-                .setColor('#f5e042')
+                    .setAuthor('WELCOME!')
+                    .setDescription('<@'+message.author.id+'>, Welcome to Cookie Land! Use <'+ALT_PREFIX+'help> for info on how to play!')
+                    .setImage('https://media.discordapp.net/attachments/726550648660688979/731121120497106984/2Q.png')
+                    .setColor('#f5e042')
+                channel.send(welcome)
                 break;
             case 'testm' :
             console.log(2.7);
@@ -626,14 +572,42 @@ console.log(1);
 //        }
 //    }
 //}
+function displayInv(message) {
+                user = message.author.id
+                cookieCount = coinData [message.author.id].inventory.cookies
+                tonkCount = coinData [message.author.id].inventory.tonks
+                tapeCount = coinData [message.author.id].inventory.ducttape
+                ArmCount = coinData [message.author.id].inventory.longarm
+                invMessage = new Discord.MessageEmbed ()
+                    .setAuthor('Inventory')
+                    .setDescription('<@'+user+'>')
+                    .addField("**Cookies: **", cookieCount)
+                    .addField("**Tonks: **", tonkCount)
+                    .addField("**Duct Tape Rolls: **", tapeCount)
+                    .addField("**Robotic Arms: **", ArmCount)
+                    .setColor('#f5e042')
+                message.channel.send(invMessage)
+}
 
+function displayShop(message, cookiePrice, tonkPrice, tapePrice, armPrice) {
+    shopMessage = new Discord.MessageEmbed ()
+        .setAuthor('Shop')
+        .setDescription("Here is what we have for sale!")
+        .addField("-Cookies: \"Just your average living cookie.. what?\" \nGet more cookies so you can have more than everyone else; \nThe person with the most cookies has a higher chance of winning heists and battles! \nPrice(in coins):",cookiePrice)
+        .addField("-Tonks: \"Tonk you very much sir, for blowing up my enemies.\" \nTougher than 10 cookies, Tonks are the ultimate fighters. \nBe careful when saving for one, as your money will be left to steal! \nPrice(in coins):",tonkPrice)
+        .addField("-Duct Tape Rolls: \"Broken robot part? DUCT TAPE! Scraped knee? DUCT TAPE!\" \nDuct-tape your coins to the gound, your coins will be harder to steal! \nDuct-tape is sticky, if an enemy beats you they could get more coins! \nPrice(in coins):",tapePrice)
+        .addField("-Robotic Arms: \"Now I don't need my real flimsy squishy arms!\"*chop*\"OOWW-\" \nRobotic arms are better for stealing. \nRobotic arms increase your chances of pulling off a heist or winning a fight! \nPrice(in coins):",armPrice)
+        .setColor('#f5e042')
+        message.channel.send(shopMessage)
+}
 
 function purchaseItem(message, args, item) {
     console.log(3.0);
     ensureUserInDB(message.author);
 
     let allc = parseInt(coinData[message.author.id].coins);
-    let inum = parseInt(coinData[message.author.id].inventory[item.dn]);
+    let inum = coinData[message.author.id].inventory[item.dn];
+    message.channel.send(inum)
     let num = 1;
     if(Object.keys(args).length != 0) {
         num = typeof args[0] == 'number' ? args[0] : 1;
@@ -655,11 +629,13 @@ function purchaseItem(message, args, item) {
 }
 
 function buyItem(msg, args) {
+    console.log(3.0);
+    ensureUserInDB(msg.author);
     switch (args[0].toLowerCase()) {
         case 'coin':
             if(args[1] == auth.token) {
-                let currentCoin = coinData [message.author.id].coins;
-                coinData [message.author.id].coins = moneys + args[2] ? args[2] : 1;
+                let currentCoin = parseInt(coinData [msg.author.id].coins);
+                coinData [msg.author.id].coins = currentCoin + (args[2] ? args[2] : 1);
                 fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
                     if (err) throw err;
                 });
@@ -667,26 +643,26 @@ function buyItem(msg, args) {
 
             break;
         case 'cookie':
-            purchaseItem(msg,args.pop(),{name: 'Cookie', cost: cookiePrice, dn: 'cookie'});
+            purchaseItem(msg,args.pop(),{name: 'Cookie', cost: parseInt(cookiePrice), dn: 'cookie'});
             break;
         case 'tonk':
-            purchaseItem(msg,args.pop(),{name: 'Tonk', cost: 50, dn: 'tonk'});
+            purchaseItem(msg,args.pop(),{name: 'Tonk', cost: parseInt(tonkPrice), dn: 'tonk'});
             break;
         case 'tank':
-            purchaseItem(msg,args.pop(),{name: 'Tank', cost: 51, dn: 'tonk'});
+            purchaseItem(msg,args.pop(),{name: 'Tank', cost: parseInt(tonkPrice), dn: 'tonk'});
             break;
         case 'arm':
-            purchaseItem(msg,args.pop(),{name:'Long Arm', cost: 100, dn: 'longarm'});
+            purchaseItem(msg,args.pop(),{name:'Long Arm', cost: parseInt(armPrice), dn: 'longarm'});
             break;
         case 'tape':
-            purchaseItem(msg,args.pop(),{name: 'Duck tape', cost: 100, dn: 'ducttape'});
+            purchaseItem(msg,args.pop(),{name: 'Duck tape', cost: parseInt(tapePrice), dn: 'ducttape'});
             break;
         default:
             msg.channel.send(`\'${args[0]}\' is not a valid item. Type \"${ALT_PREFIX}shop help\" for more info.`);
     }
 }
 
-function cookieHiest(msg, args) {
+function cookieHeist(msg, args) {
 
 }
 //if (message.content.startsWith(PREFIX+"cookie fight")) {
@@ -732,22 +708,27 @@ function cookieFight(msg, args) {
 
 }
 
-function displayBank(message) {
-    user = message.author.id
-    coinsInBank = parseInt(coinData [user].bank)
+function displayBank(msg) {
+    user = msg.author.id
+    coinsInBank = parseInt(coinData [user].bank.amount)
     bankMessage = new Discord.MessageEmbed ()
         .setAuthor('Bank')
         .setDescription('<@'+user+'>')
         .addField("**Money in the Bank: **", coinsInBank)
         .setThumbnail("https://media.discordapp.net/attachments/726550648660688979/730848313309659226/bank_door.jpg")
         .setColor('#f5e042')
-    message.channel.send(bankMessage)
+    msg.channel.send(bankMessage)
 }
 
 
-function cookieBank(msg, message, args) {
+function cookieBank(msg, args) {
+    let _id = msg.author.id
     if(Object.keys(args) == 0) {
-        displayBank(message);
+        displayBank(msg);
+        coinData[_id].bank.lastInteract = Date.now();
+        fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+            if (err) console.log(err);
+        });
         return;
     }
     switch (args[0].toLowerCase()) {
@@ -775,13 +756,14 @@ function bankWithdraw(msg, args) {
     //Get user's data
     let allc = parseInt(coinData[_id].coins);
     let bbNoI = parseInt(coinData[_id].bank.amount);
-    let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
+    //let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
 
     coinData[_id].bank.lastInteract = Date.now();
 
     //Check to see if they have a valid number
     if(Object.keys(args) == 0 || isNaN(args[0])) {
-        amount = bbWithI;
+        amount = bbNoI;
+    //changed bbWithI to bbNoI, it was removing coins rather than adding. Took my 40 and made it 4.
     } else {
         amount = args[0];
     }
@@ -791,9 +773,10 @@ function bankWithdraw(msg, args) {
         msg.channel.send(`${amount} coin${amount == 1 ? '' : 's'} is too many! You only have ${bbWithI}.`);
     } else {
         coinData[_id].coins = allc + amount;
-        coinData[_id].bank.amount = bbWithI - amount;
+        coinData[_id].bank.amount = bbNoI - amount;
+        //changed bbWithI to bbNoI    ^ plz fix xD
 
-        msg.channel.send(`${amount}/${bbWithI} Coins have been withdrawn from the bank, leaving ${bbWithI-amount} coin${bbWithI-amount == 1 ? '' : 's'} remaining.\nYou now have ${allc + amount} coin${bbWithI-amount == 1 ? '' : 's'}!`);
+        msg.channel.send(`${amount}/${bbWithI} Coins have been withdrawn from the bank!`)//, leaving ${bbWithI-amount} coin${bbWithI-amount == 1 ? '' : 's'} remaining.\nYou now have ${allc + amount} coin${bbWithI-amount == 1 ? '' : 's'}!`);
     }
 
     fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
@@ -808,15 +791,16 @@ function bankDeposit(msg, args) {
     //Get user's data
     let allc = parseInt(coinData[_id].coins);
     let bbNoI = parseInt(coinData[_id].bank.amount);
-    let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
+    //let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
 
     coinData[_id].bank.lastInteract = Date.now();
 
     //Check to see if they have a valid number
-    if(Object.keys(args) == 0 || isNaN(args[0])) {
+    if(Object.keys(args).length == 0 || isNaN(args[0])) {
+        msg.channel.send("There is no argument")
         amount = allc;
     } else {
-        amount = args[0];
+        amount = parseInt(args[0]);
     }
 
     //Check to see if they have enough coins
@@ -824,9 +808,10 @@ function bankDeposit(msg, args) {
         msg.channel.send(`${amount} coin ${amount == 1 ? '' : 's'} is too many! You only have ${bbWithI}.`);
     } else {
         coinData[_id].coins = allc - amount;
-        coinData[_id].bank.amount = bbWithI + amount;
+        coinData[_id].bank.amount = bbNoI + amount;
+        //changed bbWithI to bbNoI    ^   it broken plz fix xD
 
-        msg.channel.send(`${amount}/${allc} Coins have been deposited into the bank, leaving ${allc-amount} coin + ${allc-amount == 1 ? '' : 's'} + remaining.\nYou now have ${bbWithI + amount} coin${bbWithI + amount == 1 ? 's' : ''} in the bank!`)
+        msg.channel.send(`${amount}/${allc} Coins have been deposited into the bank!`)//, leaving ${allc-amount} coin + ${allc-amount == 1 ? '' : 's'} + remaining.\nYou now have ${bbWithI + amount} coin${bbWithI + amount == 1 ? 's' : ''} in the bank!`)
     }
 
     fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
@@ -1014,9 +999,9 @@ function ensureUserInDB(user) {
             else console.log(user.id + " has been added!")
         });
     } else {
-        fs.writeFile("./data/users/userData.json", JSON.stringify(data), (err) => {
-            if (err) console.error(err)
-        });
+        //fs.writeFile("./data/users/userData.json", JSON.stringify(data), (err) => {
+        //    if (err) console.error(err)
+        //});
     }
     if(!coinData[user.id]) {
         coinData[user.id] = {
@@ -1039,7 +1024,6 @@ function ensureUserInDB(user) {
     });
 }
 
-
 function dataStorage(message) {
     let channel = message.channel;
     let user = message.author;
@@ -1052,6 +1036,4 @@ function dataStorage(message) {
 
     return "done";
 }
-
-
 client.login(auth.token);
