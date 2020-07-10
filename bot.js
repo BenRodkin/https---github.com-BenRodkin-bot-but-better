@@ -24,6 +24,10 @@ client.on('ready', function (evt) {
 var xPos = 2
 var yPos = 1
 var mazeActive = 0
+cookiePrice = 10
+tonkPrice = 100
+tapePrice = 50
+armPrice = 50
 
 client.on("guildMemberAdd", member => {
     var role = member.guild.roles.find ("name", "Outsiders");
@@ -386,10 +390,6 @@ try{
                 channel.send("You balance is currently: "+_moneymessage+" (coins earned from messages sent)")
                 break;
             case 'shop':
-                cookiePrice = 10
-                tonkPrice = 100
-                tapePrice = 50
-                armPrice = 50
                 shopMessage = new Discord.MessageEmbed ()
                 .setAuthor('Shop')
                 .setDescription("Here is what we have for sale!")
@@ -400,6 +400,7 @@ try{
                 .setColor('#f5e042')
                 channel.send(shopMessage)
                 break;
+
             case 'inv':
                 user = message.author.id
                 cookieCount = coinData [message.author.id].inventory.cookies
@@ -416,9 +417,10 @@ try{
                 .setColor('#f5e042')
                 channel.send(invMessage)
                 break;
+
             case 'bank':
-                coinsInBank = parseInt(coinData [message.author.id].bank)
                 user = message.author.id
+                coinsInBank = parseInt(coinData [user].bank)
                 bankMessage = new Discord.MessageEmbed ()
                     .setAuthor('Bank')
                     .setDescription('<@'+user+'>')
@@ -428,36 +430,15 @@ try{
                 channel.send(bankMessage)
                 break;
 
-            case 'buy':
-                break;
-            case 'cookiefight':
-                break;
-
-            case 'op':
-                user = message.author.id
-                const embed1 = new Discord.MessageEmbed ()
-                .setAuthor('Emris')
-                .setDescription('<@'+user+'>')
-                //.setFooter('This was made in js')
-                //.attachFiles('./maze/blankmaze.gif')
-                .setImage('https://media.discordapp.net/attachments/723667226778927136/727607580213510184/blankmaze2.png')
-                //.addField(new Discord.MessageAttachment('https://media.discordapp.net/attachments/727565988752523354/727568477954769037/x2y1large.png'))
-                //.setThumbnail(url = 'https://media.discordapp.net/attachments/727565988752523354/727568477954769037/x2y1large.png?width=1000&height=946')
-                //.setThumbnail(url = 'https://media.discordapp.net/attachments/726549559584751683/727189926986121246/blake.png', outerWidth = '249', outerHeight = '243')
-                .setColor('#f5e042')
-                channel.send(embed1)
-
-            case 'test':
-                coin1 = 5
-                coin2 = 2
-                value0 = coin1 + coin2
-                value1 = coin1 / value0
-                channel.send(value0)
-                channel.send("Chances are: "+value1)
-                var rn = Math.random() * 1
-                channel.send(rn)
-                break;
-            case 'test3':
+                //edit message by id
+            case 'editmessage':
+                channel.send("Ima edit this")
+                messageID = message.guild.me.find.messageID()
+                message.channel.messages.fetch({around: messageID, limit: 1})
+                    .then(msg => {
+                const fetchedMsg = msg.first();
+                fetchedMsg.edit("Lol");
+                })
                 break;
             //==============================================================================================================================
             /*case 'displayx':
@@ -871,7 +852,12 @@ function moveLeft(message) {
         cantMove(message)
 
     }
-    else if (((xPos == 2) && (yPos == 1)) || ((xPos == 2) && (yPos == 4)) || ((xPos == 4) && (yPos == 1)) || ((xPos == 4) && (yPos == 2)) || ((xPos == 5) && (yPos == 1)) || ((xPos == 5) && (yPos == 5))) {
+    else if (((xPos == 2) && (yPos == 1)) 
+        || ((xPos == 2) && (yPos == 4)) 
+        || ((xPos == 4) && (yPos == 1)) 
+        || ((xPos == 4) && (yPos == 2)) 
+        || ((xPos == 5) && (yPos == 1)) 
+        || ((xPos == 5) && (yPos == 5))) {
         cantMove(message)
     }
 //    else if ((xPos == 2) && (yPos == 1)) {
@@ -892,7 +878,12 @@ function moveRight(message) {
     if (xPos == 5) {
         cantMove(message)
     }
-    else if (((xPos == 1) && (yPos == 1)) || ((xPos == 1) && (yPos == 4)) || ((xPos == 3) && (yPos == 1)) || ((xPos == 3) && (yPos == 2)) || ((xPos == 4) && (yPos == 1)) || ((xPos == 4) && (yPos == 5))) {
+    else if (((xPos == 1) && (yPos == 1)) 
+        || ((xPos == 1) && (yPos == 4)) 
+        || ((xPos == 3) && (yPos == 1)) 
+        || ((xPos == 3) && (yPos == 2)) 
+        || ((xPos == 4) && (yPos == 1)) 
+        || ((xPos == 4) && (yPos == 5))) {
         cantMove(message)
     }
     else {
@@ -904,7 +895,16 @@ function moveUp(message) {
     if (((xPos > 0) && (xPos < 4) && (yPos == 5)) || ((yPos == 5) && (xPos == 5))) {
         cantMove(message)
     }
-    else if (((xPos==2)&&(yPos==1))||((xPos==2)&&(yPos==2))||((xPos==2)&&(yPos==4))||((xPos==3)&&(yPos==2))||((xPos==3)&&(yPos==3))||((xPos==3)&&(yPos==4))||((xPos==4)&&(yPos==3))||((xPos==4)&&(yPos==4))||((xPos==5)&&(yPos==2))||((xPos==5)&&(yPos==3))) {
+    else if (((xPos==2)&&(yPos==1))
+        ||((xPos==2)&&(yPos==2))
+        ||((xPos==2)&&(yPos==4))
+        ||((xPos==3)&&(yPos==2))
+        ||((xPos==3)&&(yPos==3))
+        ||((xPos==3)&&(yPos==4))
+        ||((xPos==4)&&(yPos==3))
+        ||((xPos==4)&&(yPos==4))
+        ||((xPos==5)&&(yPos==2))
+        ||((xPos==5)&&(yPos==3))) {
         cantMove(message)
     }
     else if ((xPos==4)&&(yPos==5)) {
@@ -922,7 +922,16 @@ function moveDown(message) {
     if (yPos == 1) {
         cantMove(message)
     }
-    else if (((xPos==2)&&(yPos==2))||((xPos==2)&&(yPos==3))||((xPos==2)&&(yPos==5))||((xPos==3)&&(yPos==3))||((xPos==3)&&(yPos==4))||((xPos==3)&&(yPos==5))||((xPos==4)&&(yPos==4))||((xPos==4)&&(yPos==5))||((xPos==5)&&(yPos==3))||((xPos==5)&&(yPos==4))) {
+    else if (((xPos==2)&&(yPos==2))
+        ||((xPos==2)&&(yPos==3))
+        ||((xPos==2)&&(yPos==5))
+        ||((xPos==3)&&(yPos==3))
+        ||((xPos==3)&&(yPos==4))
+        ||((xPos==3)&&(yPos==5))
+        ||((xPos==4)&&(yPos==4))
+        ||((xPos==4)&&(yPos==5))
+        ||((xPos==5)&&(yPos==3))
+        ||((xPos==5)&&(yPos==4))) {
 
     }
     else {
@@ -935,18 +944,6 @@ function mazeGame(message, args) {
     ensureUserInDB(message.author);
 
     message.channel.send(mazeController(message.author.id, args));
-
-
-
-    //sendLocation(message)
-    //if (xPos = 2) {
-    //    if (yPos = 1) {
-    //        message.channel.send(new Discord.MessageAttachment('./maze/x2y1.png'));
-    //        message.channel.send('you can go right');
-    //}}
-    //else {
-    //    message.channel.send("You can't go that way!")
-    //}
 
 }
 function spamMessage(message) {
@@ -1037,10 +1034,6 @@ function dataStorage(message) {
     ensureUserInDB(user)
 
     return "done";
-
-
-
-
 }
 
 
