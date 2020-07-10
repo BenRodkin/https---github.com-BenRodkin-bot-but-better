@@ -5,7 +5,6 @@ const client = new Discord.Client();
 const fs = require('fs');
 
 const mazeController = require('./scripts/mazeController');
-const miniGame = require('./scripts/thewanderer.js');
 const coinData = require ('./data/users/coinData.json');
 
 const { isNullOrUndefined, isUndefined } = require('util');
