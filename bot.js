@@ -10,18 +10,17 @@ const coinData = require ('./data/users/coinData.json');
 const { isNullOrUndefined, isUndefined } = require('util');
 const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require('constants');
 
-
-
 const MAIN_PREFIX = auth.mainPrefix;
 const ALT_PREFIX = auth.altPrefix;
 
 client.on('ready', function (evt) {
     console.log(`Loggid in as ${client.user.tag}!`);
-    client.user.setActivity('Kody beat Micah with robots~', { type: 'WATCHING' })
+    client.user.setActivity('to the sound of the wind...', { type: 'LISTENING' })
     .then(presence => console.log(`Activity set to ${presence.activities[0].name}`))
     .catch(console.error);
 });
 
+//Default Variable settings
 var xPos = 2
 var yPos = 1
 var mazeActive = 0
@@ -30,7 +29,6 @@ client.on("guildMemberAdd", member => {
     var role = member.guild.roles.find ("name", "Outsiders");
     member.addRole (role);
     ensureUserInDB(member);
-
 });
 
 client.on("guildMemberRemove", member => {
@@ -45,6 +43,7 @@ client.on('message', message => {
     let channelID = message.channelID;
     let evt = message.evt;
     //if()
+
     if (mazeActive == 1) {
         if (message.author.id == "723979592024719370") {
             channel.messages.fetch({ limit: 1 }).then(messages => {
@@ -522,10 +521,8 @@ try{
             case 'maze':
                 mazeGame(message, args);
                 mazeActive = 1
-
                 break;
 
-            //=============================================================================================================================
             case 'up':
                 moveUp(message)
                 break;
@@ -538,30 +535,8 @@ try{
             case 'right':
                 moveRight(message)
                 break;
-            //==============================================================================================================================
 
-            case 'test1':
-                mention = message.author.id
-                //the "727595969100775566" is the message ID. We will replace this with the MazeMessage variable.
-                const editEmbed = new Discord.MessageEmbed ()
-                    .setImage('https://media.discordapp.net/attachments/727565988752523354/727596289088290846/blankmaze.gif')
-                    .setColor('#f5e042')
-                    .addField("Hello <@"+mention+">, how was your day?")
-                    .setDescription("Hello (des) <@"+mention+">, how")
-                //channel.send(editEmbed)
-                message.channel.send(editEmbed)
-            case 'test2':
-                mention = message.author.id
-                //the "727595969100775566" is the message ID. We will replace this with the MazeMessage variable.
-                const editEmbed1 = new Discord.MessageEmbed ()
-                    .setImage('https://media.discordapp.net/attachments/727565988752523354/727596289088290846/blankmaze.gif')
-                    .setColor('#f5e042')
-                    .addField("Hello <@"+mention+">, how was your day?", null)
-                    .setDescription("Hello (des) <@"+mention+">, how")
-                //channel.send(editEmbed)
-                message.channel.send(editEmbed1)
-
-            case 'getmention':
+            case 'getmention'://sends a dm
                 mention = message.mentions.users.first()
                 if (mention == null) {return;}
                 //message.delete()
@@ -587,25 +562,6 @@ try{
             case '8ball':
                 var random = Math.floor (Math.random() * (9))
                 channel.send(new Discord.MessageAttachment("./randomimages/"+random+".jpg"))
-                break;
-
-                //testing
-
-            //case 'sleep':
-            //    channel.send("I think i'ma take a nap...")
-            //    sleep(message)
-            //    channel.send("I'm awake!")
-            //    break;
-
-            //disfunctional
-            case 'deletetest':
-                //1000 = 1 sec
-                deleteTime = 3000
-                //message.delete (3000)
-                channel.send("Ima delete this...").then(msg => {
-                    msg.delete({ timeout: 5000 })
-                    })
-                    .catch(console.error);
                 break;
 
             default:
@@ -740,7 +696,7 @@ function buyItem(msg, args) {
             purchaseItem(msg,args.pop(),{name: 'Duck tape', cost: 100, dn: 'ducttape'});
             break;
         default:
-            msg.channel.send(`\'${args[0]}\' is not a valid item. Type \'${ALT_PREFIX}shop help\' for more info.`);
+            msg.channel.send(`\'${args[0]}\' is not a valid item. Type \"${ALT_PREFIX}shop help\" for more info.`);
     }
 }
 
