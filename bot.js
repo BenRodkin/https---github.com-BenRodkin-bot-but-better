@@ -589,9 +589,14 @@ console.log(1);
             case 'heist':
                 message.channel.send('Learn how to speel \'hiest\'.');
                 break;
-            case 'reset':
+            case 'start':
             console.log(2.6);
                 ensureUserInDB(user);
+                welcome = new Discord.MessageEmbed ()
+                .setAuthor('WELCOME!')
+                .setDescription('<@'+message.author.id+'>, Welcome to Cookie Land! Use <'+ALT_PREFIX+'help> for info on how to play!')
+                .setImage('https://media.discordapp.net/attachments/726550648660688979/731121120497106984/2Q.png')
+                .setColor('#f5e042')
                 break;
             case 'testm' :
             console.log(2.7);
@@ -662,7 +667,7 @@ function buyItem(msg, args) {
 
             break;
         case 'cookie':
-            purchaseItem(msg,args.pop(),{name: 'Cookie', cost: 10, dn: 'cookie'});
+            purchaseItem(msg,args.pop(),{name: 'Cookie', cost: cookiePrice, dn: 'cookie'});
             break;
         case 'tonk':
             purchaseItem(msg,args.pop(),{name: 'Tonk', cost: 50, dn: 'tonk'});
@@ -727,10 +732,22 @@ function cookieFight(msg, args) {
 
 }
 
+function displayBank(message) {
+    user = message.author.id
+    coinsInBank = parseInt(coinData [user].bank)
+    bankMessage = new Discord.MessageEmbed ()
+        .setAuthor('Bank')
+        .setDescription('<@'+user+'>')
+        .addField("**Money in the Bank: **", coinsInBank)
+        .setThumbnail("https://media.discordapp.net/attachments/726550648660688979/730848313309659226/bank_door.jpg")
+        .setColor('#f5e042')
+    message.channel.send(bankMessage)
+}
 
-function cookieBank(msg, args) {
+
+function cookieBank(msg, message, args) {
     if(Object.keys(args) == 0) {
-        msg.channel.send("Display bank info here");
+        displayBank(message);
         return;
     }
     switch (args[0].toLowerCase()) {
@@ -741,7 +758,7 @@ function cookieBank(msg, args) {
             bankDeposit(msg,args.pop());
             break;
         case 'info':
-            msg.channel.send("Display bank info here");
+            displayBank(message);
             break;
         case 'help':
             msg.channel.send("Display bank help here");
