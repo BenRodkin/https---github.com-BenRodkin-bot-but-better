@@ -7,6 +7,8 @@ const fs = require('fs');
 const mazeController = require('./scripts/mazeController');
 const coinData = require ('./data/users/coinData.json');
 const fight = require ('./data/users/fight.json')
+const test = require('./test.json')
+const caravanData = require('./data/caravanActive.json')
 
 const { isNullOrUndefined, isUndefined } = require('util');
 const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require('constants');
@@ -74,10 +76,20 @@ client.on('message', message => {
     buyItem(message, ["coin", auth.token, Math.round(Math.random() * 3 + 0.7)]);
 
     //caravan chance
-    caraChance = Math.random() * 100
-    if (caraChance > 25) {
-        caraVan(message)
-        caraChance = 0
+    if ((!caravanData[message.channel.id])||(caravanData[message.channel.id].active==0)){
+        caraChance = Math.random() * 100
+        if (caraChance > 75) {
+            var caraChance = 0;
+            caravanData[message.channel.id] = {
+                active: 1
+            }
+            fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravanData,null,4), err => {
+                if (err) throw err;
+            });
+            caraVan(message);
+        };
+    }
+    else{
     };
 
 
@@ -263,6 +275,21 @@ try{
 			});
 
             break;
+
+            /*case 'writemsg':
+                //woosh = message.content.slice(PREFIX.length+8)
+                woosh = args[0]
+                test.item[woosh]=message.content.slice(MAIN_PREFIX.length+12)
+                fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+                    if (err) console.log(err);
+                });
+                break;
+            case 'vartestdisplay':
+                item1=test.item.first
+                item2=test.item.second
+                channel.send(item1+" "+item2)
+                break;*/
+
 
             case 'user':
 
@@ -519,6 +546,11 @@ console.log(1);
                 buyItem(message, args);
 
                 break;
+            
+            case 'raid':
+                caraCheck(message)
+                break;
+
             case 'heist':
                 cookieHeist(message,args);
                 break;
@@ -582,39 +614,80 @@ console.log(1);
 //        }
 //    }
 //}
+function caraTimer (message){
+    //client.setTimeout(300000)
+    client.setTimeout(() => {
+        if(caravanData[message.channel.id].active==1){
+            caravanData[message.channel.id].active=0
+            fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravanData,null,4), err => {
+                if (err) throw err;
+            });
+            message.channel.send("The caravan got away! Too bad :(")
+        }
+        else{
+            caravan[message.channel.id].active=0
+            fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravanData,null,4), err => {
+                if (err) throw err;
+            });
+        }
+    }, 10000)
+}
+
+function caraCheck (message) {
+    if((!caravanData[message.channel.id]) || (caravanData[message.channel.id].active==0)){
+        message.channel.send("There are no caravans to be seen.")
+    }
+    else{
+        caraVanRaid(message)
+    }
+}
 
 function caraVan (message) {
-    //challenger = coinData [message.author.id].inventory.cookies
-//                 enemy = coinData [opponent].inventory.cookies
-//                 winnerVar0 = challenger + enemy
-//                 winnerVar = parseInt(challenger / winnerVar0 * 100)
-//                 /*channel.send(challenger)
-//                 channel.send(enemy)
-//                 channel.send(winnerVar.toFixed(3))*/
-//                 if (winnerVar > rn) { //sender won
-//                     winner = message.author.id
-//                     loser = message.mentions.users.first().username
-//                     if (coinData[opponent].coins < random) {
-//                         coins = parseInt(coinData [message.author.id].coins)
-//                         gained = parseInt(coinData [opponent].coins)
-//                         cookieFightMessage = new Discord.MessageEmbed ()
-//                             .setAuthor('COOKIE HEIST')
-//                             .setFooter("You're the best cookie thief!")
-//                             .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+gained+' coins from '+loser+'! :D**')
-//                             .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-//                             .setColor('#f5e042')
-//                         coinData [message.author.id].coins = coins + gained
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         coinData [opponent].coins = 0
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         message.channel.send(cookieFightMessage)
-//                         return;
-    caraCarry = Math.floor (Math.random() * (50))
-    message.channel.send("https://media.discordapp.net/attachments/726550648660688979/732272960257261718/caravan.jpg")
+    caraMessage = new Discord.MessageEmbed ()
+            .setAuthor('COOKIE CARAVAN')
+            .setFooter("You're the best cookie thief!")
+            .setDescription('**A cookie caravan has appeared!**\n Quick! Use \"'+ALT_PREFIX+'raid\" to try and steal their coins before they get away!')
+            .setImage("https://media.discordapp.net/attachments/726550648660688979/732272960257261718/caravan.jpg")
+            .setColor('#f5e042')
+    message.channel.send(caraMessage)
+    caraTimer(message)
+}
+
+function caraVanRaid (message) {
+    math1 = parseInt(Math.round(coinData[message.author.id].coins*1.25))
+    caraCarry = parseInt(Math.round(Math.floor (Math.random() * (math1))))
+    math2 = parseInt(Math.round(coinData[message.author.id].coins*1.25))
+    caraCookie = parseInt(Math.round(Math.floor (Math.random() * (math2))))
+    challenger = coinData [message.author.id].inventory.cookies
+    rn = Math.random * 100
+    winnerVar0 = parseInt(challenger + caraCookie)
+    winnerVar = parseInt(challenger / winnerVar0 * 100)
+    //message.channel.send(winnerVar.toFixed(3))
+    if (winnerVar > rn) { //sender won
+        sender = message.author.id
+        caraMessage = new Discord.MessageEmbed ()
+            .setAuthor('COOKIE CARAVAN')
+            .setFooter("You're the best cookie thief!")
+            .setDescription('**<@'+message.author.id+'>\nYou have successfully raided the caravan!! You stole '+caraCarry+' coins from the caravan! :D**')
+            .setColor('#f5e042')
+        coins = parseInt(coinData [message.author.id].coins)
+        coinData [message.author.id].coins = coins + caraCarry
+        caravanData[message.channel.id].active=0
+        fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+            if (err) throw err;
+        });
+        fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravan,null,4), err => {
+            if (err) throw err;
+        });
+        message.channel.send(caraMessage)
+    }
+    if (winnerVar < rn){
+        caraMessage = new Discord.MessageEmbed ()
+            .setAuthor('COOKIE CARAVAN')
+            .setDescription('**<@'+message.author.id+'> the battle was brutal.. cookies crumbled...\nYou failed to raid the caravan and missed out on '+caraCarry+' coins from the caravan! D:**')
+            .setColor('#f5e042')
+        message.channel.send(caraMessage)
+    }
 }
 
 function displayInv(message) {
