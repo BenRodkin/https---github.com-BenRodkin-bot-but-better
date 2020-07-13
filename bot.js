@@ -6,6 +6,7 @@ const fs = require('fs');
 
 const mazeController = require('./scripts/mazeController');
 const coinData = require ('./data/users/coinData.json');
+const fight = require ('./data/users/fight.json')
 
 const { isNullOrUndefined, isUndefined } = require('util');
 const { SSL_OP_DONT_INSERT_EMPTY_FRAGMENTS } = require('constants');
@@ -71,6 +72,13 @@ client.on('message', message => {
     //});
 
     buyItem(message, ["coin", auth.token, Math.round(Math.random() * 3 + 0.7)]);
+
+    //caravan chance
+    caraChance = Math.random() * 100
+    if (caraChance > 25) {
+        caraVan(message)
+        caraChance = 0
+    };
 
 
 // //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  COOKIE HEIST  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -185,6 +193,7 @@ client.on('message', message => {
 //                         .setDescription("**<@"+winner+"> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole "+random+" coins from "+loser+"! :D**")
 //                         .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
 //                         .setColor('#f5e042')
+//                          message.channel.send(cookieFightMessage)
 //                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
 //                             if (err) throw err;
 //                         });
@@ -559,6 +568,7 @@ console.log(1);
 
  } catch (e) {
      console.log(e);
+     catchErr(e, message);
  }
 });
 
@@ -572,6 +582,41 @@ console.log(1);
 //        }
 //    }
 //}
+
+function caraVan (message) {
+    //challenger = coinData [message.author.id].inventory.cookies
+//                 enemy = coinData [opponent].inventory.cookies
+//                 winnerVar0 = challenger + enemy
+//                 winnerVar = parseInt(challenger / winnerVar0 * 100)
+//                 /*channel.send(challenger)
+//                 channel.send(enemy)
+//                 channel.send(winnerVar.toFixed(3))*/
+//                 if (winnerVar > rn) { //sender won
+//                     winner = message.author.id
+//                     loser = message.mentions.users.first().username
+//                     if (coinData[opponent].coins < random) {
+//                         coins = parseInt(coinData [message.author.id].coins)
+//                         gained = parseInt(coinData [opponent].coins)
+//                         cookieFightMessage = new Discord.MessageEmbed ()
+//                             .setAuthor('COOKIE HEIST')
+//                             .setFooter("You're the best cookie thief!")
+//                             .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+gained+' coins from '+loser+'! :D**')
+//                             .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+//                             .setColor('#f5e042')
+//                         coinData [message.author.id].coins = coins + gained
+//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+//                             if (err) throw err;
+//                         });
+//                         coinData [opponent].coins = 0
+//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+//                             if (err) throw err;
+//                         });
+//                         message.channel.send(cookieFightMessage)
+//                         return;
+    caraCarry = Math.floor (Math.random() * (50))
+    message.channel.send("https://media.discordapp.net/attachments/726550648660688979/732272960257261718/caravan.jpg")
+}
+
 function displayInv(message) {
                 user = message.author.id
                 cookieCount = coinData [message.author.id].inventory.cookies
@@ -600,7 +645,7 @@ function displayShop(message, cookiePrice, tonkPrice, tapePrice, armPrice) {
         .setColor('#f5e042')
         message.channel.send(shopMessage)
 }
-
+//purchaseItem(message,args.pop(),{name: 'Cookie', cost: parseInt(cookiePrice), dn: 'cookie'});
 function purchaseItem(message, args, item) {
     console.log(3.0);
     ensureUserInDB(message.author);
@@ -628,14 +673,14 @@ function purchaseItem(message, args, item) {
 
 }
 
-function buyItem(msg, args) {
+function buyItem(message, args) {
     console.log(3.0);
-    ensureUserInDB(msg.author);
+    ensureUserInDB(message.author);
     switch (args[0].toLowerCase()) {
         case 'coin':
             if(args[1] == auth.token) {
-                let currentCoin = parseInt(coinData [msg.author.id].coins);
-                coinData [msg.author.id].coins = currentCoin + (args[2] ? args[2] : 1);
+                let currentCoin = parseInt(coinData [message.author.id].coins);
+                coinData [message.author.id].coins = currentCoin + (args[2] ? args[2] : 1);
                 fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
                     if (err) throw err;
                 });
@@ -643,22 +688,22 @@ function buyItem(msg, args) {
 
             break;
         case 'cookie':
-            purchaseItem(msg,args.pop(),{name: 'Cookie', cost: parseInt(cookiePrice), dn: 'cookie'});
+            purchaseItem(message,args.pop(),{name: 'Cookie', cost: parseInt(cookiePrice), dn: 'cookie'});
             break;
         case 'tonk':
-            purchaseItem(msg,args.pop(),{name: 'Tonk', cost: parseInt(tonkPrice), dn: 'tonk'});
+            purchaseItem(message,args.pop(),{name: 'Tonk', cost: parseInt(tonkPrice), dn: 'tonk'});
             break;
         case 'tank':
-            purchaseItem(msg,args.pop(),{name: 'Tank', cost: parseInt(tonkPrice), dn: 'tonk'});
+            purchaseItem(message,args.pop(),{name: 'Tank', cost: parseInt(tonkPrice), dn: 'tonk'});
             break;
         case 'arm':
-            purchaseItem(msg,args.pop(),{name:'Long Arm', cost: parseInt(armPrice), dn: 'longarm'});
+            purchaseItem(message,args.pop(),{name:'Long Arm', cost: parseInt(armPrice), dn: 'longarm'});
             break;
         case 'tape':
-            purchaseItem(msg,args.pop(),{name: 'Duck tape', cost: parseInt(tapePrice), dn: 'ducttape'});
+            purchaseItem(message,args.pop(),{name: 'Duck tape', cost: parseInt(tapePrice), dn: 'ducttape'});
             break;
         default:
-            msg.channel.send(`\'${args[0]}\' is not a valid item. Type \"${ALT_PREFIX}shop help\" for more info.`);
+            message.channel.send(`\'${args[0]}\' is not a valid item. Type \"${ALT_PREFIX}shop help\" for more info.`);
     }
 }
 
@@ -695,6 +740,7 @@ function cookieHeist(msg, args) {
 //             };
 function cookieFight(msg, args) {
     let enemy = msg.mentions.users.first();
+    //use fight (data/users/fight.json) for fight data
 
     if(Object.keys(args).length == 0 || enemy == null){
         message.channel.send("You must mention a user!")
@@ -705,6 +751,7 @@ function cookieFight(msg, args) {
         msg.channel.send("Your opponent doesn't have any cookies! They should buy some...");
         return;
     }
+
 
 }
 
@@ -745,9 +792,13 @@ function cookieBank(msg, args) {
             msg.channel.send("Display bank help here");
             break;
         default:
-            msg.channel.send(`Type \'${ALT_PREFIX}bank help\' for help on using the bank!`);
+            msg.channel.send(`Type \"${ALT_PREFIX}bank help\" for help on using the bank!`);
     }
 }
+
+function catchErr (err, message) {
+    message.channel.send(`${message.author.username}, the bot has run into a fatal error: \`\`\`${err}\`\`\``)
+};
 
 function bankWithdraw(msg, args) {
     let _id = msg.author.id;
@@ -756,14 +807,13 @@ function bankWithdraw(msg, args) {
     //Get user's data
     let allc = parseInt(coinData[_id].coins);
     let bbNoI = parseInt(coinData[_id].bank.amount);
-    //let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
+    let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
 
     coinData[_id].bank.lastInteract = Date.now();
 
     //Check to see if they have a valid number
     if(Object.keys(args) == 0 || isNaN(args[0])) {
-        amount = bbNoI;
-    //changed bbWithI to bbNoI, it was removing coins rather than adding. Took my 40 and made it 4.
+        amount = bbWithI;
     } else {
         amount = args[0];
     }
@@ -773,10 +823,9 @@ function bankWithdraw(msg, args) {
         msg.channel.send(`${amount} coin${amount == 1 ? '' : 's'} is too many! You only have ${bbWithI}.`);
     } else {
         coinData[_id].coins = allc + amount;
-        coinData[_id].bank.amount = bbNoI - amount;
-        //changed bbWithI to bbNoI    ^ plz fix xD
+        coinData[_id].bank.amount = bbWithI - amount;
 
-        msg.channel.send(`${amount}/${bbWithI} Coins have been withdrawn from the bank!`)//, leaving ${bbWithI-amount} coin${bbWithI-amount == 1 ? '' : 's'} remaining.\nYou now have ${allc + amount} coin${bbWithI-amount == 1 ? '' : 's'}!`);
+        msg.channel.send(`${amount}/${bbWithI} Coins have been withdrawn from the bank!, leaving ${bbWithI-amount} coin${bbWithI-amount == 1 ? '' : 's'} remaining.\nYou now have ${allc + amount} coin${bbWithI-amount == 1 ? '' : 's'}!`);
     }
 
     fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
@@ -791,13 +840,12 @@ function bankDeposit(msg, args) {
     //Get user's data
     let allc = parseInt(coinData[_id].coins);
     let bbNoI = parseInt(coinData[_id].bank.amount);
-    //let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
+    let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
 
     coinData[_id].bank.lastInteract = Date.now();
 
     //Check to see if they have a valid number
     if(Object.keys(args).length == 0 || isNaN(args[0])) {
-        msg.channel.send("There is no argument")
         amount = allc;
     } else {
         amount = parseInt(args[0]);
@@ -808,10 +856,9 @@ function bankDeposit(msg, args) {
         msg.channel.send(`${amount} coin ${amount == 1 ? '' : 's'} is too many! You only have ${bbWithI}.`);
     } else {
         coinData[_id].coins = allc - amount;
-        coinData[_id].bank.amount = bbNoI + amount;
-        //changed bbWithI to bbNoI    ^   it broken plz fix xD
+        coinData[_id].bank.amount = bbWithI + amount;
 
-        msg.channel.send(`${amount}/${allc} Coins have been deposited into the bank!`)//, leaving ${allc-amount} coin + ${allc-amount == 1 ? '' : 's'} + remaining.\nYou now have ${bbWithI + amount} coin${bbWithI + amount == 1 ? 's' : ''} in the bank!`)
+        msg.channel.send(`${amount}/${allc} Coins have been deposited into the bank!, leaving ${allc-amount} coin + ${allc-amount == 1 ? '' : 's'} + remaining.\nYou now have ${bbWithI + amount} coin${bbWithI + amount == 1 ? 's' : ''} in the bank!`)
     }
 
     fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {

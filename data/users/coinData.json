@@ -1,21 +1,34 @@
 {
     "380364910078459905": {
-        "coins": null,
+        "coins": 178,
         "message": "(None)",
         "inventory": {
             "cookies": 0,
             "tonks": 0,
             "ducttape": 0,
-            "longarm": 0,
-            "cookie": "1number"
+            "longarm": 0
         },
         "bank": {
-            "amount": 32434,
-            "lastInteract": 1594395377412
+            "amount": 0,
+            "lastInteract": 1594656701923
+        }
+    },
+    "400433374596038667": {
+        "coins": 14,
+        "message": "(None)",
+        "inventory": {
+            "cookies": 0,
+            "tonks": 0,
+            "ducttape": 0,
+            "longarm": 0
+        },
+        "bank": {
+            "amount": 0,
+            "lastInteract": 1594655888028
         }
     },
     "364590637993033731": {
-        "coins": 8,
+        "coins": 9,
         "message": "(None)",
         "inventory": {
             "cookies": 0,
@@ -25,21 +38,7 @@
         },
         "bank": {
             "amount": 0,
-            "lastInteract": 1594390326916
-        }
-    },
-    "627852058845904927": {
-        "coins": 5,
-        "message": "(None)",
-        "inventory": {
-            "cookies": 0,
-            "tonks": 0,
-            "ducttape": 0,
-            "longarm": 0
-        },
-        "bank": {
-            "amount": 0,
-            "lastInteract": 1594397315624
+            "lastInteract": 1594656407826
         }
     }
 }
