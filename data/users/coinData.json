@@ -1,10 +1,10 @@
 {
     "380364910078459905": {
-        "coins": 133,
+        "coins": 122,
         "message": "(None)",
         "bank": {
-            "amount": 47798,
-            "lastInteract": 1594750995456
+            "amount": 47944,
+            "lastInteract": 1594751297246
         },
         "inventory": {
             "cookies": 128,
@@ -28,11 +28,11 @@
         }
     },
     "400433374596038667": {
-        "coins": 10965,
+        "coins": 1,
         "message": "(None)",
         "bank": {
-            "amount": 166862,
-            "lastInteract": 1594741489706
+            "amount": 348654,
+            "lastInteract": 1594751572127
         },
         "inventory": {
             "cookies": 406,
