@@ -1,8 +1,11 @@
 {
     "380364910078459905": {
-        "coins": 232,
+        "coins": 133,
         "message": "(None)",
-        "bank": 47991,
+        "bank": {
+            "amount": 47798,
+            "lastInteract": 1594750995456
+        },
         "inventory": {
             "cookies": 128,
             "tonks": 0,
@@ -11,9 +14,12 @@
         }
     },
     "364590637993033731": {
-        "coins": 26838,
+        "coins": 26990,
         "message": "(None)",
-        "bank": 0,
+        "bank": {
+            "amount": 0,
+            "lastInteract": 0
+        },
         "inventory": {
             "cookies": 32,
             "tonks": 0,
@@ -22,9 +28,12 @@
         }
     },
     "400433374596038667": {
-        "coins": 63,
+        "coins": 10965,
         "message": "(None)",
-        "bank": 166862,
+        "bank": {
+            "amount": 166862,
+            "lastInteract": 1594741489706
+        },
         "inventory": {
             "cookies": 406,
             "tonks": 10,
@@ -35,7 +44,10 @@
     "627852058845904927": {
         "coins": 0,
         "message": "(None)",
-        "bank": 6040,
+        "bank": {
+            "amount": 6040,
+            "lastInteract": 0
+        },
         "inventory": {
             "cookies": 104,
             "tonks": 0,
@@ -44,9 +56,12 @@
         }
     },
     "702275663197110332": {
-        "coins": 30,
+        "coins": -55,
         "message": "(None)",
-        "bank": 0,
+        "bank": {
+            "amount": 0,
+            "lastInteract": 0
+        },
         "inventory": {
             "cookies": 7,
             "tonks": 0,
@@ -57,7 +72,10 @@
     "711396658776113182": {
         "coins": 3,
         "message": "(None)",
-        "bank": 0,
+        "bank": {
+            "amount": 0,
+            "lastInteract": 0
+        },
         "inventory": {
             "coins": 0,
             "tonks": 0,

@@ -69,16 +69,12 @@ client.on('message', message => {
     //numberOfWords = message.content.split(' ')
     //numberOfCoins = parseInt(numberOfWords.length)
 
-    //fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-    //    if (err) throw err;
-    //});
-
     buyItem(message, ["coin", auth.token, Math.round(Math.random() * 3 + 0.7)]);
 
     //caravan chance
     if ((!caravanData[message.channel.id])||(caravanData[message.channel.id].active==0)){
         caraChance = Math.random() * 100
-        if (caraChance > 75) {
+        if (caraChance > 95) {
             var caraChance = 0;
             caravanData[message.channel.id] = {
                 active: 1
@@ -564,7 +560,7 @@ console.log(1);
                 bankWithdraw(message,args);
                 break;
             case 'deposit':
-                bankDeposit(message,args);
+                bankDeposit(message,args/*.pop()*/);
                 break;
             case 'cookie':
                 if(Object.keys(args).length != 0){
@@ -625,12 +621,9 @@ function caraTimer (message){
             message.channel.send("The caravan got away! Too bad :(")
         }
         else{
-            caravan[message.channel.id].active=0
-            fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravanData,null,4), err => {
-                if (err) throw err;
-            });
+            
         }
-    }, 10000)
+    }, /*300000*/20000)
 }
 
 function caraCheck (message) {
@@ -656,16 +649,18 @@ function caraVan (message) {
 function caraVanRaid (message) {
     math1 = parseInt(Math.round(coinData[message.author.id].coins*1.25))
     caraCarry = parseInt(Math.round(Math.floor (Math.random() * (math1))))
-    math2 = parseInt(Math.round(coinData[message.author.id].coins*1.25))
+    math2 = parseInt(Math.round(coinData[message.author.id].inventory.cookies*1.25))
     caraCookie = parseInt(Math.round(Math.floor (Math.random() * (math2))))
-    challenger = coinData [message.author.id].inventory.cookies
-    rn = Math.random * 100
+    challenger = parseInt(coinData [message.author.id].inventory.cookies)
+    rn = Math.random() * 100
     winnerVar0 = parseInt(challenger + caraCookie)
     winnerVar = parseInt(challenger / winnerVar0 * 100)
+    message.channel.send(math1+" is how many coins you have + 25percent. "+caraCarry+" is how many coins the caravan has. "+math2+" is how many cookies you have + 25percent. "+caraCookie+" is how many cookies the caravan has. "+rn+" is the random number to beat. "+winnerVar+" is the percent chance you have of winning.")
     //message.channel.send(winnerVar.toFixed(3))
     if (winnerVar > rn) { //sender won
+        message.channel.send("Win")
         sender = message.author.id
-        caraMessage = new Discord.MessageEmbed ()
+        caraMessageVictory = new Discord.MessageEmbed ()
             .setAuthor('COOKIE CARAVAN')
             .setFooter("You're the best cookie thief!")
             .setDescription('**<@'+message.author.id+'>\nYou have successfully raided the caravan!! You stole '+caraCarry+' coins from the caravan! :D**')
@@ -676,17 +671,18 @@ function caraVanRaid (message) {
         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
             if (err) throw err;
         });
-        fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravan,null,4), err => {
+        fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravanData,null,4), err => {
             if (err) throw err;
         });
-        message.channel.send(caraMessage)
+        message.channel.send(caraMessageVictory)
     }
     if (winnerVar < rn){
-        caraMessage = new Discord.MessageEmbed ()
+        message.channel.send("lose")
+        caraMessageLoss = new Discord.MessageEmbed ()
             .setAuthor('COOKIE CARAVAN')
             .setDescription('**<@'+message.author.id+'> the battle was brutal.. cookies crumbled...\nYou failed to raid the caravan and missed out on '+caraCarry+' coins from the caravan! D:**')
             .setColor('#f5e042')
-        message.channel.send(caraMessage)
+        message.channel.send(caraMessageLoss)
     }
 }
 
@@ -780,9 +776,112 @@ function buyItem(message, args) {
     }
 }
 
-function cookieHeist(msg, args) {
+function cookieHeist(message, args) {
 
-}
+    let enemy = message.mentions.users.first();
+    if(Object.keys(args).length == 0 || enemy == null){
+        message.channel.send("You must mention a user!")
+        return;
+    };
+    opponent = message.mentions.users.first().id
+    
+    if (!coinData [opponent]){
+        message.channel.send("I don't recognize this user!")
+        return;
+    };
+
+    if(coinData[enemy.id].inventory.cookies == 0) {
+        msg.channel.send("Your opponent doesn't have any cookies! They should buy some...");
+        return;
+    };
+    enemyMention = message.mentions.users.first()
+    var random = Math.floor (Math.random() * (50))
+    var rn = Math.random() * 100
+    challenger = parseInt(coinData [message.author.id].inventory.cookies)
+    enemy = parseInt(coinData [opponent].inventory.cookies)
+    winnerVar0 = challenger + enemy
+    winnerVar = parseInt(challenger / winnerVar0 * 100)
+    /*channel.send(challenger)
+    channel.send(enemy)
+    channel.send(winnerVar.toFixed(3))*/
+    if (winnerVar > rn) { //sender won
+        winner = message.author.id
+        loser = message.mentions.users.first().username
+        if (coinData[opponent].coins < random) {
+            coins = parseInt(coinData [message.author.id].coins)
+            gained = parseInt(coinData [opponent].coins)
+            cookieHeistMessage = new Discord.MessageEmbed ()
+                .setAuthor('COOKIE HEIST')
+                .setFooter("You're the best cookie thief!")
+                .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+gained+' coins from '+loser+'! :D**')
+                .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                .setColor('#f5e042')
+            coinData [message.author.id].coins = coins + gained
+            coinData [opponent].coins = 0
+            fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+                if (err) throw err;
+            });
+            message.channel.send(cookieHeistMessage)
+            return;
+        }
+        else {
+            cookieHeistMessage = new Discord.MessageEmbed ()
+                .setAuthor('COOKIE HEIST')
+                .setFooter("You're the best cookie thief!")
+                .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+random+' coins from '+loser+'! :D**')
+                .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                .setColor('#f5e042')
+            coins = coinData [message.author.id].coins
+            coinData [message.author.id].coins = coins + random
+            coins2 = coinData [opponent].coins
+            coinData [opponent].coins = coins2 - random
+            fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+                if (err) throw err;
+            });
+            message.channel.send(cookieHeistMessage)
+            return;
+        };
+    }
+    if (winnerVar < rn) { //the other person won, not sender
+        winner = message.mentions.users.first().id
+        loser = message.author.username
+        if (coinData [opponent].coins < random) {
+            coins = parseInt(coinData [opponent].coins)
+            gained = parseInt(coinData [message.author.id].coins)
+            cookieHeistMessage = new Discord.MessageEmbed ()
+                .setAuthor('COOKIE HEIST')
+                .setFooter("You're the best cookie thief!")
+                .setDescription("**<@"+winner+"> the battle was brutal.. cookies crumbled...\nYou have won the cookie heist!! You stole "+gained+" coins from "+loser+"! :D**")
+                .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                .setColor('#f5e042')
+            coinData [opponent].coins = coins + gained
+            coinData [message.author.id].coins = 0
+            fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+                if (err) throw err;
+            });
+            channel.send(cookieHeistMessage)
+            return;
+        }
+        else {
+            coins = parseInt(coinData [opponent].coins)
+            coinData [opponent].coins = coins + random
+            cookieFightMessage = new Discord.MessageEmbed ()
+                .setAuthor('COOKIE HEIST')
+                .setFooter("You're the best cookie thief!")
+                .setDescription("**<@"+winner+"> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole "+random+" coins from "+loser+"! :D**")
+                .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
+                .setColor('#f5e042')
+            coins2 = coinData [message.author.id].coins
+            coinData [message.author.id].coins = coins2 - random
+            fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+                if (err) throw err;
+            });
+            message.channel.send(cookieFightMessage)
+            return;
+        };
+    };
+};
+
 //if (message.content.startsWith(PREFIX+"cookie fight")) {
 //         enemyMention = message.content.split(' ').slice(2)
 //         messageMention = message.mentions.users.first()
@@ -818,12 +917,19 @@ function cookieFight(msg, args) {
     if(Object.keys(args).length == 0 || enemy == null){
         message.channel.send("You must mention a user!")
         return;
-    }
+    };
+
+    if (!coinData [opponent]){
+        message.channel.send("I don't recognize this user!")
+        return;
+    };
 
     if(coinData[enemy.id].inventory.cookies == 0) {
         msg.channel.send("Your opponent doesn't have any cookies! They should buy some...");
         return;
-    }
+    };
+
+
 
 
 }
@@ -856,7 +962,7 @@ function cookieBank(msg, args) {
             bankWithdraw(msg,args.pop());
             break;
         case 'deposit':
-            bankDeposit(msg,args.pop());
+            bankDeposit(msg,args/*.pop()*/);
             break;
         case 'info':
             displayBank(message);
@@ -874,22 +980,26 @@ function catchErr (err, message) {
 };
 
 function bankWithdraw(msg, args) {
+    msg.channel.send(typeof args[0])
+    msg.channel.send(args[0])
     let _id = msg.author.id;
     let amount = -1;
 
     //Get user's data
     let allc = parseInt(coinData[_id].coins);
     let bbNoI = parseInt(coinData[_id].bank.amount);
-    let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
+    let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * (28800000/3600000)))); //A=P(1+r/n)^tn
 
     coinData[_id].bank.lastInteract = Date.now();
 
     //Check to see if they have a valid number
-    if(Object.keys(args) == 0 || isNaN(args[0])) {
+    if((Object.keys(args).length == 0) || (isNaN(args[0]))) {
+        msg.channel.send("There is no number argument")
         amount = bbWithI;
     } else {
-        amount = args[0];
-    }
+        msg.channel.send("There is a number argument")
+        amount = parseInt(args[0]);
+    };
 
     //Check to see if they have enough coins
     if(amount > bbWithI) {
@@ -899,7 +1009,7 @@ function bankWithdraw(msg, args) {
         coinData[_id].bank.amount = bbWithI - amount;
 
         msg.channel.send(`${amount}/${bbWithI} Coins have been withdrawn from the bank!, leaving ${bbWithI-amount} coin${bbWithI-amount == 1 ? '' : 's'} remaining.\nYou now have ${allc + amount} coin${bbWithI-amount == 1 ? '' : 's'}!`);
-    }
+    };
 
     fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
         if (err) console.log(err);
@@ -907,13 +1017,14 @@ function bankWithdraw(msg, args) {
 }
 
 function bankDeposit(msg, args) {
+    msg.channel.send(args[0])
     let _id = msg.author.id;
     let amount = -1;
 
     //Get user's data
     let allc = parseInt(coinData[_id].coins);
     let bbNoI = parseInt(coinData[_id].bank.amount);
-    let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((parseInt(coinData[_id].bank.lastInteract) - Date.now()) * 28800000))); //A=P(1+r/n)^tn
+    let bbWithI = Math.floor(bbNoI * Math.pow((1 + 0.1/28800000),((Date.now() - parseInt(coinData[_id].bank.lastInteract)) * (28800000/3600000)))); //A=P(1+r/n)^tn
 
     coinData[_id].bank.lastInteract = Date.now();
 
@@ -922,7 +1033,8 @@ function bankDeposit(msg, args) {
         amount = allc;
     } else {
         amount = parseInt(args[0]);
-    }
+        msg.channel.send(args[0])
+    };
 
     //Check to see if they have enough coins
     if(amount > allc) {
@@ -932,7 +1044,7 @@ function bankDeposit(msg, args) {
         coinData[_id].bank.amount = bbWithI + amount;
 
         msg.channel.send(`${amount}/${allc} Coins have been deposited into the bank!, leaving ${allc-amount} coin + ${allc-amount == 1 ? '' : 's'} + remaining.\nYou now have ${bbWithI + amount} coin${bbWithI + amount == 1 ? 's' : ''} in the bank!`)
-    }
+    };
 
     fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
         if (err) console.log(err);
