@@ -524,6 +524,13 @@ try{
 console.log(1);
     
         switch (cmd) {
+            case 'clear':
+                client.clearTimeout(caraTime, 0)
+                caravanData[message.channel.id].active=0
+                fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravanData,null,4), err => {
+                    if (err) throw err;
+                });
+                message.channel.send("Timeout Cleared!")
 
             case 'bal':
                 let _moneymessage = coinData[message.author.id].coins
@@ -612,7 +619,7 @@ console.log(1);
 //}
 function caraTimer (message){
     //client.setTimeout(300000)
-    client.setTimeout(() => {
+    caraTime = client.setTimeout(() => {
         if(caravanData[message.channel.id].active==1){
             caravanData[message.channel.id].active=0
             fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravanData,null,4), err => {
@@ -675,6 +682,12 @@ function caraVanRaid (message) {
             if (err) throw err;
         });
         message.channel.send(caraMessageVictory)
+        client.clearTimeout(caraTime, 0)
+        caravanData[message.channel.id].active=0
+        fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravanData,null,4), err => {
+            if (err) throw err;
+        });
+
     }
     if (winnerVar < rn){
         message.channel.send("lose")
@@ -683,6 +696,11 @@ function caraVanRaid (message) {
             .setDescription('**<@'+message.author.id+'> the battle was brutal.. cookies crumbled...\nYou failed to raid the caravan and missed out on '+caraCarry+' coins from the caravan! D:**')
             .setColor('#f5e042')
         message.channel.send(caraMessageLoss)
+        client.clearTimeout(caraTime, 0)
+        caravanData[message.channel.id].active=0
+        fs.writeFile ("./data/caravanActive.json", JSON.stringify(caravanData,null,4), err => {
+            if (err) throw err;
+        });
     }
 }
 
@@ -716,16 +734,23 @@ function displayShop(message, cookiePrice, tonkPrice, tapePrice, armPrice) {
 }
 //purchaseItem(message,args.pop(),{name: 'Cookie', cost: parseInt(cookiePrice), dn: 'cookie'});
 function purchaseItem(message, args, item) {
+    message.channel.send(args[1]+" is how many cookies you want to buy")
+    message.channel.send(item.dn+ " is the item name")
+    message.channel.send(item.cost+" is how much the item costs for 1")
     console.log(3.0);
     ensureUserInDB(message.author);
 
     let allc = parseInt(coinData[message.author.id].coins);
     let inum = coinData[message.author.id].inventory[item.dn];
-    message.channel.send(inum)
+    message.channel.send(inum+" is how many the user has of that given item")
     let num = 1;
-    if(Object.keys(args).length != 0) {
-        num = typeof args[0] == 'number' ? args[0] : 1;
-    }
+    if(Object.keys(args).length !== 0) {
+        num = parseInt(args[1])
+        message.channel.send(num+" is what it set the cookie amount to")
+        if (isNaN(num)){
+            num = 1
+        };
+    };
 
     if (coinData [message.author.id].coins < item.cost * num) {
         message.channel.send("You don't have enough coins!");
@@ -757,19 +782,19 @@ function buyItem(message, args) {
 
             break;
         case 'cookie':
-            purchaseItem(message,args.pop(),{name: 'Cookie', cost: parseInt(cookiePrice), dn: 'cookie'});
+            purchaseItem(message,args,{name: 'Cookie', cost: parseInt(cookiePrice), dn: 'cookies'});
             break;
         case 'tonk':
-            purchaseItem(message,args.pop(),{name: 'Tonk', cost: parseInt(tonkPrice), dn: 'tonk'});
+            purchaseItem(message,args,{name: 'Tonk', cost: parseInt(tonkPrice), dn: 'tonks'});
             break;
         case 'tank':
-            purchaseItem(message,args.pop(),{name: 'Tank', cost: parseInt(tonkPrice), dn: 'tonk'});
+            purchaseItem(message,args,{name: 'Tank', cost: parseInt(tonkPrice), dn: 'tonks'});
             break;
         case 'arm':
-            purchaseItem(message,args.pop(),{name:'Long Arm', cost: parseInt(armPrice), dn: 'longarm'});
+            purchaseItem(message,args,{name:'Long Arm', cost: parseInt(armPrice), dn: 'longarm'});
             break;
         case 'tape':
-            purchaseItem(message,args.pop(),{name: 'Duck tape', cost: parseInt(tapePrice), dn: 'ducttape'});
+            purchaseItem(message,args,{name: 'Duck tape', cost: parseInt(tapePrice), dn: 'ducttape'});
             break;
         default:
             message.channel.send(`\'${args[0]}\' is not a valid item. Type \"${ALT_PREFIX}shop help\" for more info.`);

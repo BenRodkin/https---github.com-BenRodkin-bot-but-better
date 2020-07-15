@@ -1,20 +1,21 @@
 {
     "380364910078459905": {
-        "coins": 122,
+        "coins": 709046,
         "message": "(None)",
         "bank": {
-            "amount": 47944,
-            "lastInteract": 1594751297246
+            "amount": 931,
+            "lastInteract": 1594768443524
         },
         "inventory": {
-            "cookies": 128,
+            "cookies": 209,
             "tonks": 0,
             "ducttape": 0,
-            "longarm": 0
+            "longarm": 0,
+            "cookie": 8
         }
     },
     "364590637993033731": {
-        "coins": 26990,
+        "coins": 27135,
         "message": "(None)",
         "bank": {
             "amount": 0,
@@ -28,11 +29,11 @@
         }
     },
     "400433374596038667": {
-        "coins": 1,
+        "coins": 122,
         "message": "(None)",
         "bank": {
-            "amount": 348654,
-            "lastInteract": 1594751572127
+            "amount": 20207023,
+            "lastInteract": 1594769034762
         },
         "inventory": {
             "cookies": 406,
