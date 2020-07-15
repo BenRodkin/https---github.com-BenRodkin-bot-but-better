@@ -824,8 +824,15 @@ function cookieHeist(message, args) {
     var rn = Math.random() * 100
     challenger = parseInt(coinData [message.author.id].inventory.cookies)
     enemy = parseInt(coinData [opponent].inventory.cookies)
-    winnerVar0 = challenger + enemy
-    winnerVar = parseInt(challenger / winnerVar0 * 100)
+    enemyTape = parseInt(coinData [opponent].inventory.ducttape)
+    challengerArm = parseInt(coinData [message.author.id].inventory.longarm)
+    /*yeet = parseInt(challenger + (enemy-challengerArm))
+    yeet1 = parseInt(challenger-enemyTape)
+    yeet2 = parseInt(yeet1 / yeet * 100)*/
+    winnerVar0 = parseInt(challenger + (enemy-challengerArm))
+    winnerVar1 = parseInt(challenger-enemyTape)
+    winnerVar = parseInt(winnerVar1 / winnerVar0 * 100)
+    //message.channel.send(winnerVar+" is the chance to win without arms and tape. "+yeet2+" are your new chances with the tape.")
     /*channel.send(challenger)
     channel.send(enemy)
     channel.send(winnerVar.toFixed(3))*/
@@ -884,7 +891,7 @@ function cookieHeist(message, args) {
             fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
                 if (err) throw err;
             });
-            channel.send(cookieHeistMessage)
+            message.channel.send(cookieHeistMessage)
             return;
         }
         else {
