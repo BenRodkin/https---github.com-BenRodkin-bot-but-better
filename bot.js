@@ -31,6 +31,7 @@ cookiePrice = 10
 tonkPrice = 100
 tapePrice = 50
 armPrice = 50
+numberOfFights = 0
 
 client.on("guildMemberAdd", member => {
     var role = member.guild.roles.find ("name", "Outsiders");
@@ -560,6 +561,12 @@ console.log(1);
             case 'fight':
                 cookieFight(message,args);
                 break;
+            case 'accept':
+                acceptFight(message)
+                break;
+            case 'deny':
+                denyFight(message)
+                break;
             case 'bank':
                 cookieBank(message,args);
                 break;
@@ -942,8 +949,8 @@ function cookieHeist(message, args) {
 //                     return;
 //                 }
 //             };
-function cookieFight(msg, args) {
-    let enemy = msg.mentions.users.first();
+function cookieFight(message, args) {
+    enemy = message.mentions.users.first();
     //use fight (data/users/fight.json) for fight data
 
     if(Object.keys(args).length == 0 || enemy == null){
@@ -951,19 +958,84 @@ function cookieFight(msg, args) {
         return;
     };
 
+    opponent = message.mentions.users.first().id;
+
     if (!coinData [opponent]){
         message.channel.send("I don't recognize this user!")
         return;
     };
 
-    if(coinData[enemy.id].inventory.cookies == 0) {
-        msg.channel.send("Your opponent doesn't have any cookies! They should buy some...");
+    if(coinData[opponent].inventory.cookies == 0) {
+        message.channel.send("Your opponent doesn't have any cookies! They should buy some...");
+        return;
+    };
+    if( !fight[message.channel.id] || fight[message.channel.id].fightActive==0){
+        numberOfFights+=1
+        fight[message.channel.id]={
+            "fightActive":1,
+            "challengerF":message.author.id,
+            "opponentF":opponent
+        }
+        fs.writeFile ("./data/users/fight.json", JSON.stringify(fight,null,4), err => {
+            if (err) throw err;
+        });
+        message.channel.send("<@"+opponent+">, <@"+message.author.id+"> has challenged you to a cookie fight! Type "+ALT_PREFIX+"accept, or "+ALT_PREFIX+"deny!")
+        fightTimer(message)
+        return;
+    }
+    if (fight[message.channel.id].fightActive==1){
+        message.channel.send("There is already a fight taking place here!")
         return;
     };
 
 
+}
 
+function fightTimer (message){
+    //client.setTimeout(300000)
+    fightTime = client.setTimeout(() => {
+        if(fight[message.channel.id].fightActive==1){
+            fight[message.channel.id].fightActive=0
+            fs.writeFile ("./data/users/fight.json", JSON.stringify(fight,null,4), err => {
+                if (err) throw err;
+            });
+            message.channel.send("A player took too long to respond! Fight request canceled.")
+        }
+        else{
+            
+        }
+    }, /*300000*/20000)
+}
 
+function denyFight(message){
+    if(!fight[message.channel.id]||fight[message.channel.id].fightActive==0){
+        message.channel.send("There are no fights to cancel!")
+        return;
+    }
+    if(fight[message.channel.id].fightActive==1){
+        if(fight[message.channel.id].opponentF==message.author.id){
+            client.clearTimeout(fightTime, 0)
+            fight[message.channel.id].fightActive=0
+            fs.writeFile ("./data/users/fight.json", JSON.stringify(fight,null,4), err => {
+                if (err) throw err;
+            });
+            message.channel.send("Fight canceled!")        
+            return;
+        }
+        else{
+            message.channel.send("There are no fights to cancel!")
+            return;
+        };
+    };
+}
+
+function acceptFight(message){
+    message.channel.send("Fight request has been accepted!")
+    startFight(message)
+}
+
+function startFight(message){
+    
 }
 
 function displayBank(msg) {

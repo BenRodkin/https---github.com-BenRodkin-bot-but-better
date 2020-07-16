@@ -1,6 +1,6 @@
 {
     "380364910078459905": {
-        "coins": 709194,
+        "coins": 709347,
         "message": "(None)",
         "bank": {
             "amount": 931,
@@ -9,8 +9,8 @@
         "inventory": {
             "cookies": 209,
             "tonks": 0,
-            "ducttape": 200,
-            "longarm": 200,
+            "ducttape": 0,
+            "longarm": 0,
             "cookie": 8
         }
     },
@@ -29,11 +29,11 @@
         }
     },
     "400433374596038667": {
-        "coins": 122,
+        "coins": 31,
         "message": "(None)",
         "bank": {
-            "amount": 20207023,
-            "lastInteract": 1594769034762
+            "amount": 10822095,
+            "lastInteract": 1594852109805
         },
         "inventory": {
             "cookies": 406,
@@ -43,7 +43,7 @@
         }
     },
     "627852058845904927": {
-        "coins": 0,
+        "coins": 7,
         "message": "(None)",
         "bank": {
             "amount": 6040,
@@ -57,7 +57,7 @@
         }
     },
     "702275663197110332": {
-        "coins": -42,
+        "coins": -37,
         "message": "(None)",
         "bank": {
             "amount": 0,
@@ -82,6 +82,20 @@
             "tonks": 0,
             "ducttape": 0,
             "longarm": 0
+        }
+    },
+    "380368789348548609": {
+        "coins": 3,
+        "message": "(None)",
+        "inventory": {
+            "cookies": 0,
+            "tonks": 0,
+            "ducttape": 0,
+            "longarm": 0
+        },
+        "bank": {
+            "amount": 0,
+            "lastInteract": 1594867402813
         }
     }
 }
