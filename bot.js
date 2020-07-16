@@ -32,6 +32,7 @@ tonkPrice = 100
 tapePrice = 50
 armPrice = 50
 numberOfFights = 0
+array2 =  ["apple"]
 
 client.on("guildMemberAdd", member => {
     var role = member.guild.roles.find ("name", "Outsiders");
@@ -595,8 +596,26 @@ console.log(1);
                     .setColor('#f5e042')
                 channel.send(welcome)
                 break;
-            case 'testm' :
+            case 'test' :
             console.log(2.7);
+            //let array = coinData[message.author.id].inventory
+            //array = fight//[message.channel.id]
+            fs.readFile('./data/caravanActive.json', (err, data) => {
+                if (err) { throw err; }
+                const _msgs = JSON.stringify(JSON.parse(data), null, 2);
+                message.channel.send('```json\n' + _msgs + '\n```');
+                console.log(_msgs)
+              });
+            message.channel.send(JSON.stringify(coinData[message.author.id], null, 2))
+            //fight/*[message.channel.id]*/.forEach(function(item, index, array) {
+            //    message.channel.send(item+" "+ index)
+            //})
+            return;
+            case 'add':
+                item = message.content.slice(6)
+                array2.push(item)
+            //channel.send(array.length)
+            //channel.send(array[0])
                 console.log(message.mentions.users == null);
                 console.log(message.mentions.users.first());
                 console.log(message.mentions.users.first() == null);
