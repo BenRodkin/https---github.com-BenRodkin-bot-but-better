@@ -406,16 +406,6 @@ console.log(1);
  }
 });
 
-//function sleep(message) {
-//    sleepTime = message.content.slice(8)
-//    milliseconds = sleepTime * 1000
-//    var start = new Date().getTime();
-//    for (var i = 0; i < 1e7; i++) {
-//        if ((new Date().getTime() - start) > milliseconds) {
-//            break;
-//        }
-//    }
-//}
 function caraTimer (message){
     //client.setTimeout(300000)
     caraTime = client.setTimeout(() => {
@@ -712,35 +702,6 @@ function cookieHeist(message, args) {
         };
     };
 };
-
-//if (message.content.startsWith(PREFIX+"cookie fight")) {
-//         enemyMention = message.content.split(' ').slice(2)
-//         messageMention = message.mentions.users.first()
-//
-//         if ((Object.keys(enemyMention).length === 0) || (messageMention == null)) { //check to see if there is a mention, there isnt one here
-//             message.channel.send("You must mention a user!")
-//             return;
-//         }
-//         else {// there is a mention
-//             enemyId = message.mentions.users.first().id
-//             enemyMention = message.mentions.users.first()
-//             enemyUsername = message.mentions.users.first().username
-//             challengerId = message.author.id
-//             challenderUsername = message.author.username
-//             if (!coinData[enemyId]) {//check if they are registered in coinData.json, they arent.
-//                 message.channel.send("I don't recognize this user! They should buy some cookies...")
-//                 return;
-//             }
-//             else {//they are registered in coinData.json
-//                 if (!coinData [enemyId].inventory.cookies) {//check to see if they have any cookies, they dont.
-//                     message.channel.send("Your opponent doesn't have any cookies! They should buy some...")
-//                     return;
-//                 }
-//                 else {//they have a number of cookies
-//                     message.channel.send("They have cookies")
-//                     return;
-//                 }
-//             };
 function cookieFight(message, args) {
     enemy = message.mentions.users.first();
     //use fight (data/users/fight.json) for fight data
@@ -947,9 +908,98 @@ function bankDeposit(msg, args) {
     });
 }
 
+function spamMessage(message) {
+    mention = message.mentions.users.first()
+                if (mention == null) {return;}
+                mentionMessage = message.content.slice(6)
+                message.channel.send(mentionMessage)
+}
 
 
+function getAvitar(channel, person) {
+    try {
+        if (fs.existsSync('./images/avitars/' + person + '.png')) {
+            channel.send(new Discord.MessageAttachment('./images/avitars/' + person + '.png'));
+        } else {
+            channel.send(`Trainer ${person} not found.`);
+        }
+    } catch(e) {
+        channel.send(`Trainer ${person} has made an error!`);
+    }
 
+}
+
+function makeChannel(message) {
+    let server = message.guild;
+    let name = message.author.username;
+
+    //let newChannel = new Discord.TextChannel(server, "test").setName("testName").then(newChannel => console.log(`Channel's new name is ${newChannel.name}`))
+  //.catch(console.error);
+  //let mySpot = server.
+  server.channels.create(`${name}\'s  channel`)
+  .then(channel => {
+    let category = server.channels.cache.find(c => c.name == "bot-channels" && c.type == "category");
+
+    if (!category) throw new Error("Category channel does not exist");
+    channel.setParent(category.id);
+  }).catch(console.error);
+
+}
+
+function ensureUserInDB(user) {
+    let data = JSON.parse(fs.readFileSync("./data/users/userData.json", "utf8"));
+    if(!data[user.id]) {
+        let shell = JSON.parse(fs.readFileSync("./data/users/userDataShell.json", "utf8"));
+        data[user.id] = shell;
+
+        data[user.id].records.timeCreated = Date.now();
+
+        fs.writeFile("./data/users/userData.json", JSON.stringify(data), (err) => {
+            if (err) console.error(err)
+            else console.log(user.id + " has been added!")
+        });
+    } else {
+        //fs.writeFile("./data/users/userData.json", JSON.stringify(data), (err) => {
+        //    if (err) console.error(err)
+        //});
+    }
+    if(!coinData[user.id]) {
+        coinData[user.id] = {
+            coins: 0,
+            message: "(None)",
+            inventory: {
+                cookies: 0,
+                tonks: 0,
+                ducttape: 0,
+                longarm: 0
+            },
+            bank: {
+                amount: 0,
+                lastInteract: Date.now()
+            }
+        };
+    }
+    fs.writeFile("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
+        if (err) console.log(err);
+    });
+}
+
+function dataStorage(message) {
+    let channel = message.channel;
+    let user = message.author;
+    let cont = message.content;
+
+    let parts = JSON.parse(fs.readFileSync("./robotParts.json", "utf8"));
+    let data = JSON.parse(fs.readFileSync("./userData.json", "utf8"));
+
+    ensureUserInDB(user)
+
+    return "done";
+}
+
+//;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  Other Maze Functions  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+/*
 function sendLocation(message) {
     message.channel.send(new Discord.MessageAttachment("./images/mazes/0/" + (xPos - 1 + (yPos - 1) * 5) + ".png"))
     message.channel.send("Type '"+PREFIX+"Up', '"+PREFIX+"down', '"+PREFIX+"left', and '"+PREFIX+"right' to move around. Type '"+PREFIX+"resetmaze' to reset the maze.")
@@ -1075,93 +1125,5 @@ function mazeGame(message, args) {
 
     message.channel.send(mazeController(message.author.id, args));
 
-}
-function spamMessage(message) {
-    mention = message.mentions.users.first()
-                if (mention == null) {return;}
-                mentionMessage = message.content.slice(6)
-                message.channel.send(mentionMessage)
-}
-
-
-function getAvitar(channel, person) {
-    try {
-        if (fs.existsSync('./images/avitars/' + person + '.png')) {
-            channel.send(new Discord.MessageAttachment('./images/avitars/' + person + '.png'));
-        } else {
-            channel.send(`Trainer ${person} not found.`);
-        }
-    } catch(e) {
-        channel.send(`Trainer ${person} has made an error!`);
-    }
-
-}
-
-function makeChannel(message) {
-    let server = message.guild;
-    let name = message.author.username;
-
-    //let newChannel = new Discord.TextChannel(server, "test").setName("testName").then(newChannel => console.log(`Channel's new name is ${newChannel.name}`))
-  //.catch(console.error);
-  //let mySpot = server.
-  server.channels.create(`${name}\'s  channel`)
-  .then(channel => {
-    let category = server.channels.cache.find(c => c.name == "bot-channels" && c.type == "category");
-
-    if (!category) throw new Error("Category channel does not exist");
-    channel.setParent(category.id);
-  }).catch(console.error);
-
-}
-
-function ensureUserInDB(user) {
-    let data = JSON.parse(fs.readFileSync("./data/users/userData.json", "utf8"));
-    if(!data[user.id]) {
-        let shell = JSON.parse(fs.readFileSync("./data/users/userDataShell.json", "utf8"));
-        data[user.id] = shell;
-
-        data[user.id].records.timeCreated = Date.now();
-
-        fs.writeFile("./data/users/userData.json", JSON.stringify(data), (err) => {
-            if (err) console.error(err)
-            else console.log(user.id + " has been added!")
-        });
-    } else {
-        //fs.writeFile("./data/users/userData.json", JSON.stringify(data), (err) => {
-        //    if (err) console.error(err)
-        //});
-    }
-    if(!coinData[user.id]) {
-        coinData[user.id] = {
-            coins: 0,
-            message: "(None)",
-            inventory: {
-                cookies: 0,
-                tonks: 0,
-                ducttape: 0,
-                longarm: 0
-            },
-            bank: {
-                amount: 0,
-                lastInteract: Date.now()
-            }
-        };
-    }
-    fs.writeFile("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-        if (err) console.log(err);
-    });
-}
-
-function dataStorage(message) {
-    let channel = message.channel;
-    let user = message.author;
-    let cont = message.content;
-
-    let parts = JSON.parse(fs.readFileSync("./robotParts.json", "utf8"));
-    let data = JSON.parse(fs.readFileSync("./userData.json", "utf8"));
-
-    ensureUserInDB(user)
-
-    return "done";
-}
+}*/
 client.login(auth.token);
