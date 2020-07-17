@@ -1,6 +1,14 @@
 {
-    "item": {
-        "first":"None",
-        "second":"Hi"
+    "inventory":{
+        "Roboto":{
+            "Rarity":"Rare",
+            "Level":4,
+            "Power":15
+        },
+        "SuperToy":{
+            "Rarity":"Common",
+            "Level":9,
+            "Power":18
+        }
     }
 }

@@ -62,7 +62,7 @@ client.on('message', message => {
     buyItem(message, ["coin", auth.token, Math.round(Math.random() * 3 + 0.7)]);
 
     //caravan chance
-    if ((!caravanData[message.channel.id])||(caravanData[message.channel.id].active==0)){
+    /*if ((!caravanData[message.channel.id])||(caravanData[message.channel.id].active==0)){
         caraChance = Math.random() * 100
         if (caraChance > 95) {
             var caraChance = 0;
@@ -74,7 +74,7 @@ client.on('message', message => {
             });
             caraVan(message);
         };
-    };
+    };*/
 
     //Only so it wont require a prefix
     if (message.content.startsWith("rip")) {
@@ -279,24 +279,36 @@ console.log(1);
             
             case 'test' :
                 console.log(2.7);
-                let data = JSON.parse(fs.readFileSync("./data/users/fight.json", "utf8"));
+                //let data = JSON.parse(fs.readFileSync("./data/users/coinData.json", "utf8"));
+                let data = test.inventory
                 console.log(data)
                 //let data = JSON.stringify("./data/users/fight.json")
                 //console.log(data)
                 let keys = Object.keys(data)
                 let out = ''
+                /*let out1 = ''
                 //for (let in keys){
                 //    out+=data[i]+"\n"
                 //    console.log(out)
                 //    //i-=1
                 //}
                 for (const property in keys){
-                    out+=`${property}: ${keys[property]}`+"\n"
-                    console.log(out)
+                    out1+=`${keys[property]}: ${property}`+"\n"
+                    //console.log(out)
                     console.log(`${property}: ${keys[property]}`)
                     //message.channel.send(`${property}: ${keys[property]}`)
                     //i-=1
                 }
+                message.channel.send(out1)*/
+
+                //for (const property in data){
+                    //out+=`${property}: ${Object[property]}`+"\n"
+                    //console.log(out)
+                    //console.log(`${property}: ${Object[property]}`)
+                    //message.channel.send(`${property}: ${keys[property]}`)
+                    //i-=1
+                //}
+
                 //for (const property in keys){
                 //    out+=property+": "+(keys[i])[property]//data[i]+"\n"
                 //    console.log(out)
@@ -304,7 +316,14 @@ console.log(1);
                 //    message.channel.send(`${property}: ${keys[property]}`)
                     //i-=1
                 //}
-                console.log(out)
+                //console.log(out)
+                //message.channel.send(out)
+
+                for (const prop in data) {
+                    console.log(`${prop} = ${data[prop]}`);
+                    //message.channel.send(`${prop} = ${data[prop]}`)
+                    out+=`${prop}: ${data[prop]}`+"\n"
+                }
                 message.channel.send(out)
                 break;
 

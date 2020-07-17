@@ -1,6 +1,6 @@
 {
     "380364910078459905": {
-        "coins": 132,
+        "coins": 213,
         "message": "(None)",
         "bank": {
             "amount": 931,
@@ -99,7 +99,7 @@
         }
     },
     "703666314488578238": {
-        "coins": 47,
+        "coins": 50,
         "message": "(None)",
         "inventory": {
             "cookies": 0,
