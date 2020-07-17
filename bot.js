@@ -51,7 +51,6 @@ client.on('message', message => {
     let channel = message.channel;
     let channelID = message.channelID;
     let evt = message.evt;
-    //if()
 
     if (mazeActive == 1) {
         if (message.author.id == "723979592024719370") {
@@ -70,7 +69,6 @@ client.on('message', message => {
 
     //numberOfWords = message.content.split(' ')
     //numberOfCoins = parseInt(numberOfWords.length)
-
     buyItem(message, ["coin", auth.token, Math.round(Math.random() * 3 + 0.7)]);
 
     //caravan chance
@@ -86,177 +84,13 @@ client.on('message', message => {
             });
             caraVan(message);
         };
-    }
-    else{
     };
 
-
-// //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  COOKIE HEIST  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-//     if (message.content.startsWith(PREFIX+'cookie heist')) {
-//         mention = message.content.split(' ').slice(2)
-//         if (Object.keys(mention).length === 0) {
-//             message.channel.send("You need to mention someone!")
-//             return;
-//         }
-//         else {
-//             winner = 0
-//             random = 0
-//             cookieFightMessage = new Discord.MessageEmbed ()
-//             .setAuthor('COOKIE FIGHT')
-//             .setDescription('The battle was brutal.. cookies crumbled...')
-//             .setFooter("You're the best cookie worrior!")
-//             .addField(winner+", you have won the cookie fight!! You have earned "+random+" coins! :D")
-//             .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-//             .setColor('#f5e042')
-//             opponent = message.mentions.users.first().id
-//             enemyMention = message.mentions.users.first()
-//             //item1 = message.author.id
-//             //challengerMention = "<@"+item1+">"
-//             challengerMention = message.author.id
-//             if (!coinData [opponent]){
-//             message.channel.send("I don't recognize this user!")
-//             return;
-//             }
-//             else {
-//                 var random = Math.floor (Math.random() * (50))
-//                 var rn = Math.random() * 100
-//                 challenger = coinData [message.author.id].inventory.cookies
-//                 enemy = coinData [opponent].inventory.cookies
-//                 winnerVar0 = challenger + enemy
-//                 winnerVar = parseInt(challenger / winnerVar0 * 100)
-//                 /*channel.send(challenger)
-//                 channel.send(enemy)
-//                 channel.send(winnerVar.toFixed(3))*/
-//                 if (winnerVar > rn) { //sender won
-//                     winner = message.author.id
-//                     loser = message.mentions.users.first().username
-//                     if (coinData[opponent].coins < random) {
-//                         coins = parseInt(coinData [message.author.id].coins)
-//                         gained = parseInt(coinData [opponent].coins)
-//                         cookieFightMessage = new Discord.MessageEmbed ()
-//                             .setAuthor('COOKIE HEIST')
-//                             .setFooter("You're the best cookie thief!")
-//                             .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+gained+' coins from '+loser+'! :D**')
-//                             .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-//                             .setColor('#f5e042')
-//                         coinData [message.author.id].coins = coins + gained
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         coinData [opponent].coins = 0
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         message.channel.send(cookieFightMessage)
-//                         return;
-//                     }
-//                     else {
-//                         cookieFightMessage = new Discord.MessageEmbed ()
-//                             .setAuthor('COOKIE HEIST')
-//                             .setFooter("You're the best cookie thief!")
-//                             .setDescription('**<@'+winner+'> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole '+random+' coins from '+loser+'! :D**')
-//                             .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-//                             .setColor('#f5e042')
-//                         coins = coinData [message.author.id].coins
-//                         coinData [message.author.id].coins = coins + random
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         coins2 = coinData [opponent].coins
-//                         coinData [opponent].coins = coins2 - random
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         message.channel.send(cookieFightMessage)
-//                         return;
-//                     };
-//                 }
-//                 if (winnerVar < rn) { //the other person won, not sender
-//                     winner = message.mentions.users.first().id
-//                     loser = message.author.username
-//                     if (coinData [opponent].coins < random) {
-//                         coins = parseInt(coinData [opponent].coins)
-//                         gained = parseInt(coinData [message.author.id].coins)
-//                         cookieFightMessage = new Discord.MessageEmbed ()
-//                             .setAuthor('COOKIE HEIST')
-//                             .setFooter("You're the best cookie thief!")
-//                             .setDescription("**<@"+winner+"> the battle was brutal.. cookies crumbled...\nYou have won the cookie fight!! You stole "+gained+" coins from "+loser+"! :D**")
-//                             .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-//                             .setColor('#f5e042')
-//                         coinData [opponent].coins = coins + gained
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         coinData [message.author.id].coins = 0
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         channel.send(cookieFightMessage)
-//                         return;
-//                     }
-//                     else {
-//                         coins = parseInt(coinData [opponent].coins)
-//                         coinData [opponent].coins = coins + random
-//                         cookieFightMessage = new Discord.MessageEmbed ()
-//                         .setAuthor('COOKIE HEIST')
-//                         .setFooter("You're the best cookie thief!")
-//                         .setDescription("**<@"+winner+"> the battle was brutal.. cookies crumbled...\nYou have successfully completed the heist!! You stole "+random+" coins from "+loser+"! :D**")
-//                         .setImage('https://media.discordapp.net/attachments/726550648660688979/730109749009317999/c59c3d8062d81a6771737486e9de5211.png')
-//                         .setColor('#f5e042')
-//                          message.channel.send(cookieFightMessage)
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         coins2 = coinData [message.author.id].coins
-//                         coinData [message.author.id].coins = coins2 - random
-//                         fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-//                             if (err) throw err;
-//                         });
-//                         message.channel.send(cookieFightMessage)
-//                         return;
-//                     };
-//                 };
-//             };
-//         };
-//     };
-// //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  COOKIE FIGHT  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-//
-//     if (message.content.startsWith(PREFIX+"cookie fight")) {
-//         enemyMention = message.content.split(' ').slice(2)
-//         messageMention = message.mentions.users.first()
-//
-//         if ((Object.keys(enemyMention).length === 0) || (messageMention == null)) { //check to see if there is a mention, there isnt one here
-//             message.channel.send("You must mention a user!")
-//             return;
-//         }
-//         else {// there is a mention
-//             enemyId = message.mentions.users.first().id
-//             enemyMention = message.mentions.users.first()
-//             enemyUsername = message.mentions.users.first().username
-//             challengerId = message.author.id
-//             challenderUsername = message.author.username
-//             if (!coinData[enemyId]) {//check if they are registered in coinData.json, they arent.
-//                 message.channel.send("I don't recognize this user! They should buy some cookies...")
-//                 return;
-//             }
-//             else {//they are registered in coinData.json
-//                 if (!coinData [enemyId].inventory.cookies) {//check to see if they have any cookies, they dont.
-//                     message.channel.send("Your opponent doesn't have any cookies! They should buy some...")
-//                     return;
-//                 }
-//                 else {//they have a number of cookies
-//                     message.channel.send("They have cookies")
-//                     return;
-//                 }
-//             };
-//
-//         };
-//     };
-
-
+    //Only so it wont require a prefix
     if (message.content.startsWith("rip")) {
         message.channel.send(new Discord.MessageAttachment("./images/randomimages/tombstone.jpg"));
     };
+
 try{
 
     if (cont.substring(0, MAIN_PREFIX.length).toLowerCase() == MAIN_PREFIX) {
@@ -271,29 +105,12 @@ try{
 			    .then((msg) => {
 				msg.edit(`Ping: ${msg.createdTimestamp - Date.now()}ms`)
 			});
-
-            break;
-
-            /*case 'writemsg':
-                //woosh = message.content.slice(PREFIX.length+8)
-                woosh = args[0]
-                test.item[woosh]=message.content.slice(MAIN_PREFIX.length+12)
-                fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-                    if (err) console.log(err);
-                });
                 break;
-            case 'vartestdisplay':
-                item1=test.item.first
-                item2=test.item.second
-                channel.send(item1+" "+item2)
-                break;*/
-
 
             case 'user':
-
                 channel.send('Showing info for ' + user + ":\n" +user + "\n" + userID + "\n" + channelID + "\n" + message + "\n" + evt);
-
                 break;
+
             case 'avi':
                 channel.send(user.displayAvatarURL());
             break;
@@ -314,10 +131,8 @@ try{
                 .addField('Hi there!')
                 .setThumbnail('https://media.discordapp.net/attachments/726549559584751683/727189926986121246/blake.png')
                 .setColor('#f5e042')
-            channel.send(embed)
-
-            //    channel.send(embed);
-            //    break;
+                channel.send(embed)
+                break;
             case 'u':
             channel.send("this is a wip right now.");
                 channel.send(dataStorage(message));
@@ -329,9 +144,8 @@ try{
                 makeChannel(message)
                 break;
 
-                //functional commands
-
             case 'help':
+                //Needs an update
                 channel.send("Here are some commands I have: \n w!help (brings up the wanderer help menu)\n a!delete <number> (deletes a number of messages) \n a!maze (allows you to play a maze game) \n a!spam <mention> <number> (mentions a given person a set number of times, still under construction) \n a!8ball <question> (a magic 8ball tells you your fate) \n a!ping (check the speed at which the bot responds)")
                 break;
 
@@ -344,59 +158,10 @@ try{
                     channel.send ("That's too much! Try a lesser number...")
                 }
                 break;
-            case 'only':
-                if (message.author.id == "364590637993033731")
-                    channel.send("It worked")
-                else {
-                    channel.send("Wrong person")
-                }
-                break;
             case 'say':
                 sayMessage = message.content.slice(6)
                 channel.send(sayMessage)
                 message.delete()
-                break;
-            /*case 'ship':
-                item1 = message.content.split(' ')
-                if (item1 == null) {
-                    channel.send("You need to send a value!")
-                    break;
-                }
-                else if (item2 == null) {
-                    sender = message.author
-                    var affinity = Math.floor (Math.random() * (100))
-                    channel.send('${item[0]}and${sender}are ${affinity}% compatible!`)
-                    break;
-                }
-                else {
-                    var affinity = Math.floor (Math.random() * (100))
-                    channel.send(item1+"\nand\n"+item2+"\nare "+affinity+"% compatible!")
-                    break;
-                }*/
-
-            case 'channel':
-                channel1 = message.channel
-                channel.send("got it")
-                break;
-            case 'channelsend':
-                channel1.send("It worked")
-                break;
-            case 'test3000':
-                if (message.channel == channel1) {
-                    channel.send("This is the right channel")
-                    break;
-                }
-            case 'write':
-                saveMessage = message.content.slice(8)
-                coinData [message.author.id].message = saveMessage;
-                fs.writeFile ("./data/users/coinData.json", JSON.stringify(coinData,null,4), err => {
-                    if (err) throw err
-                message.channel.send("Message written!")
-                })
-                break;
-            case 'read':
-                let messagesave = coinData[message.author.id].message
-                channel.send("Message is: "+ messagesave)
                 break;
 
                 //edit message by id
@@ -409,6 +174,7 @@ try{
                 fetchedMsg.edit("Lol");
                 })
                 break;
+            //Maze commands:
             //==============================================================================================================================
             /*case 'displayx':
                 channel.send(xPos)
@@ -443,32 +209,19 @@ try{
                 channel.send ("X value set!")
                 break;
             }
-
-            case 'editmessage':
-                channel.send("Ima edit this")
-                messageID = message.guild.me.find.messageID()
-                message.channel.messages.fetch({around: messageID, limit: 1})
-                    .then(msg => {
-                const fetchedMsg = msg.first();
-                fetchedMsg.edit("Lol");
-                })
-                break;
-
             //case 'maze2':
-
-
             case 'resetmaze':
                 xPos = 2
                 yPos = 1
                 channel.send("Maze reset!")
                 break;
-            //==============================================================================================================================
 
             /*case 'maze':
                 mazeGame(message)
                 mazeComplete = false
                 break;*/
-            case 'maze':
+            //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;  NEWER MAZE COMMANDS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+            /*case 'maze':
                 mazeGame(message, args);
                 mazeActive = 1
                 break;
@@ -485,6 +238,7 @@ try{
             case 'right':
                 moveRight(message)
                 break;
+            */ //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
             case 'getmention'://sends a dm
                 mention = message.mentions.users.first()
@@ -596,21 +350,40 @@ console.log(1);
                     .setColor('#f5e042')
                 channel.send(welcome)
                 break;
+
+            
             case 'test' :
-            console.log(2.7);
-            //let array = coinData[message.author.id].inventory
-            //array = fight//[message.channel.id]
-            fs.readFile('./data/caravanActive.json', (err, data) => {
-                if (err) { throw err; }
-                const _msgs = JSON.stringify(JSON.parse(data), null, 2);
-                message.channel.send('```json\n' + _msgs + '\n```');
-                console.log(_msgs)
-              });
-            message.channel.send(JSON.stringify(coinData[message.author.id], null, 2))
-            //fight/*[message.channel.id]*/.forEach(function(item, index, array) {
-            //    message.channel.send(item+" "+ index)
-            //})
-            return;
+                console.log(2.7);
+                let data = JSON.parse(fs.readFileSync("./data/users/fight.json", "utf8"));
+                console.log(data)
+                //let data = JSON.stringify("./data/users/fight.json")
+                //console.log(data)
+                let keys = Object.keys(data)
+                let out = ''
+                //for (let in keys){
+                //    out+=data[i]+"\n"
+                //    console.log(out)
+                //    //i-=1
+                //}
+                for (const property in keys){
+                    out+=`${property}: ${keys[property]}`+"\n"
+                    console.log(out)
+                    console.log(`${property}: ${keys[property]}`)
+                    //message.channel.send(`${property}: ${keys[property]}`)
+                    //i-=1
+                }
+                //for (const property in keys){
+                //    out+=property+": "+(keys[i])[property]//data[i]+"\n"
+                //    console.log(out)
+                //    console.log(`${property}: ${keys[property]}`)
+                //    message.channel.send(`${property}: ${keys[property]}`)
+                    //i-=1
+                //}
+                console.log(out)
+                message.channel.send(out)
+                break;
+
+            
             case 'add':
                 item = message.content.slice(6)
                 array2.push(item)
