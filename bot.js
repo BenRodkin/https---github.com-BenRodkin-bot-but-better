@@ -280,19 +280,49 @@ console.log(1);
             case 'test' :
                 console.log(2.7);
                 //let data = JSON.parse(fs.readFileSync("./data/users/coinData.json", "utf8"));
-                let data = test.inventory
-                console.log(data)
                 //let data = JSON.stringify("./data/users/fight.json")
                 //console.log(data)
+
+
+                let data = test.inventory
+                console.log(data)
                 let keys = Object.keys(data)
                 let out = ''
-                /*let out1 = ''
-                //for (let in keys){
-                //    out+=data[i]+"\n"
-                //    console.log(out)
-                //    //i-=1
-                //}
-                for (const property in keys){
+                for (let i in data){
+                    console.log(JSON.stringify(i))
+                    out+=i+"\n"
+                    let kData = test.inventory[i]
+                    console.log(kData)
+                    let k = data[i]
+                    console.log(k)
+                    let kKeys =Object.keys(k)
+                    for(let j in kData){
+                        console.log(JSON.stringify(j))
+                        //out+=kKeys[j]+"\n"
+                        out+=`${j}: ${kData[j]}`+"\n"
+                    }
+                    console.log(kKeys)
+                }
+                message.channel.send(out)
+                console.log(keys)
+                
+                
+                
+                
+                
+                //console.log(kKeys)
+                //message.channel.send(keys)
+
+                /*Let keys = Object.keys(data)
+                For(let i in keys) {
+                Let k = data[i]
+                Let kKeys =Object.keys(k)
+                For(let j in kKeys) {
+                //do stuff 
+                }
+                }*/   
+
+                /*for (const property in keys){
                     out1+=`${keys[property]}: ${property}`+"\n"
                     //console.log(out)
                     console.log(`${property}: ${keys[property]}`)
@@ -319,12 +349,32 @@ console.log(1);
                 //console.log(out)
                 //message.channel.send(out)
 
-                for (const prop in data) {
+                /*for (const prop in data) {
                     console.log(`${prop} = ${data[prop]}`);
+                    console.log(`${prop} = ${data[prop[data]]}`);
                     //message.channel.send(`${prop} = ${data[prop]}`)
                     out+=`${prop}: ${data[prop]}`+"\n"
+                    message.channel.send(JSON.stringify(data[prop]))
+                }*/
+
+                //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+                /*let data = test.inventory
+                console.log(data)
+                let keys = Object.keys(data)
+                let out = ''
+
+                for (const prop in data) {
+                    console.log(`${prop} = ${data[prop]}`);
+                    console.log(`${prop} = ${data[prop[data]]}`);
+                    //message.channel.send(`${prop} = ${data[prop]}`)
+                    out+=`${prop}: ${data[prop]}`+"\n"
+                    message.channel.send(JSON.stringify(data[prop]))
                 }
                 message.channel.send(out)
+                console.log(keys)
+                message.channel.send(keys)
+                break;*/
                 break;
 
             
