@@ -24,9 +24,6 @@ client.on('ready', function (evt) {
 });
 
 //Default Variable settings
-var xPos = 2
-var yPos = 1
-var mazeActive = 0
 cookiePrice = 10
 tonkPrice = 100
 tapePrice = 50
@@ -290,7 +287,7 @@ console.log(1);
                 let out = ''
                 for (let i in data){
                     console.log(JSON.stringify(i))
-                    out+=i+"\n"
+                    out+="**"+i+"** | "
                     let kData = test.inventory[i]
                     console.log(kData)
                     let k = data[i]
@@ -299,83 +296,84 @@ console.log(1);
                     for(let j in kData){
                         console.log(JSON.stringify(j))
                         //out+=kKeys[j]+"\n"
-                        out+=`${j}: ${kData[j]}`+"\n"
+                        out+=`${j}: ${kData[j]}`+" | "
                     }
                     console.log(kKeys)
+                    out+="\n"
                 }
-                message.channel.send(out)
+                let inventoryMessage = new Discord.MessageEmbed ()
+                    .setAuthor('Your Inventory:')
+                    .setDescription(out)
+                    .setColor('#f5e042')
+                message.channel.send(inventoryMessage)
                 console.log(keys)
-                
-                
-                
-                
-                
-                //console.log(kKeys)
-                //message.channel.send(keys)
-
-                /*Let keys = Object.keys(data)
-                For(let i in keys) {
-                Let k = data[i]
-                Let kKeys =Object.keys(k)
-                For(let j in kKeys) {
-                //do stuff 
-                }
-                }*/   
-
-                /*for (const property in keys){
-                    out1+=`${keys[property]}: ${property}`+"\n"
-                    //console.log(out)
-                    console.log(`${property}: ${keys[property]}`)
-                    //message.channel.send(`${property}: ${keys[property]}`)
-                    //i-=1
-                }
-                message.channel.send(out1)*/
-
-                //for (const property in data){
-                    //out+=`${property}: ${Object[property]}`+"\n"
-                    //console.log(out)
-                    //console.log(`${property}: ${Object[property]}`)
-                    //message.channel.send(`${property}: ${keys[property]}`)
-                    //i-=1
-                //}
-
-                //for (const property in keys){
-                //    out+=property+": "+(keys[i])[property]//data[i]+"\n"
-                //    console.log(out)
-                //    console.log(`${property}: ${keys[property]}`)
-                //    message.channel.send(`${property}: ${keys[property]}`)
-                    //i-=1
-                //}
-                //console.log(out)
-                //message.channel.send(out)
-
-                /*for (const prop in data) {
-                    console.log(`${prop} = ${data[prop]}`);
-                    console.log(`${prop} = ${data[prop[data]]}`);
-                    //message.channel.send(`${prop} = ${data[prop]}`)
-                    out+=`${prop}: ${data[prop]}`+"\n"
-                    message.channel.send(JSON.stringify(data[prop]))
-                }*/
-
-                //;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-                /*let data = test.inventory
-                console.log(data)
-                let keys = Object.keys(data)
-                let out = ''
-
-                for (const prop in data) {
-                    console.log(`${prop} = ${data[prop]}`);
-                    console.log(`${prop} = ${data[prop[data]]}`);
-                    //message.channel.send(`${prop} = ${data[prop]}`)
-                    out+=`${prop}: ${data[prop]}`+"\n"
-                    message.channel.send(JSON.stringify(data[prop]))
-                }
-                message.channel.send(out)
-                console.log(keys)
-                message.channel.send(keys)
-                break;*/
                 break;
+            
+            case 'equip':
+                if(!args[0]) return message.channel.send("Please select an item")
+                channel.send(args[0])
+                if(!test.inventory[args[0]]) return message.channel.send("You don't have this item")
+                channel.send(args[1])
+                if(!args[1]||isNaN(args[1])){ numberequip = 1}
+                else{numberequip = args[1]};
+                test["equipped"+numberequip] = args[0]
+                fs.writeFile ("./test.json", JSON.stringify(test,null,4), err => {
+                    if (err) throw err;
+                });
+                //fs.writefile (".test.json", JSON.stringify(test,null,4), err => { if(err) throw err; });
+                
+                /*let item3 = args[0]
+                channel.send(item3)
+                let numberequip = args[1]
+                if(Object.keys(item3).length === 0 || item3 === null) {
+                    channel.send("please select an item!")
+                    break;
+                };
+                if (!test.inventory[item3]){
+                    channel.send("You don't have this item!")
+                    break;
+                };
+                if (Object.keys(numberequip).length === 0 || isNaN(numberequip)){
+                    numberequip = 1
+                };
+                item2equip = args[0]
+                test["equipped"+numberequip] = item2equip
+                fs.writeFile (".test.json", JSON.stringify(test,null,4), err => {
+                    if (err) throw err;
+                });*/
+                break;
+
+            case 'toychallenge':
+                if (test.equipped1 === "(None)" && test.equipped2==="(None)"){
+                    channel.send("You need to equip an item to complete the challenge!")
+                    break;
+                };
+                itemName1 = test.equipped1
+                itemName2 = test.equipped2
+                if(test.equipped2==="(None)"){
+                    power1 = parseInt(test.inventory[itemName1].Power)
+                    if (power1> 20) {
+                        channel.send("You won the challenge!")
+                        break;
+                    };
+                    channel.send("You lost!")
+
+                }
+                else{
+                    power1 = parseInt(test.inventory[itemName1].Power)
+                    power2 = parseInt(test.inventory[itemName2].Power)
+                    power = parseInt(power1 + power2)
+                    channel.send("Item one has "+power1+" power points, item two has "+ power2+" power points, for a total of "+power+" points.")
+                    if (power> 20) {
+                        channel.send("You won the challenge! You had more than 20 power points!")
+                        break;
+                    };
+                    channel.send("You lost!")
+
+                }
+            case 'equipped':
+                channel.send("1: "+test.equipped1 +" 2: "+ test.equipped2)
+                
 
             
             case 'add':

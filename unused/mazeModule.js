@@ -1,3 +1,8 @@
+//goes before client.onmessage
+var xPos = 2
+var yPos = 1
+var mazeActive = 0
+
 //Goes after client.onMessage
 if (mazeActive == 1) {
     if (message.author.id == "723979592024719370") {
